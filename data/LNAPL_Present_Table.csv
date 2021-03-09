@@ -1,0 +1,13 @@
+﻿Soil Type,In well,In Formation,Note
+Silty Clay,0.1,0.000041,This much LNAPL is in the formation (m3/m2)
+Silt,0.1,0.0002,This much LNAPL is in the formation (m3/m2)
+Loam,0.1,0.00034,This much LNAPL is in the formation (m3/m2)
+Sand,0.1,0.0025,This much LNAPL is in the formation (m3/m2)
+Silty Clay,0.3,0.00039,This much LNAPL is in the formation (m3/m2)
+Silt,0.3,0.0028,This much LNAPL is in the formation (m3/m2)
+Loam,0.3,0.0058,This much LNAPL is in the formation (m3/m2)
+Sand,0.3,0.059,This much LNAPL is in the formation (m3/m2)
+Silty Clay,1,0.0045,This much LNAPL is in the formation (m3/m2)
+Silt,1,0.04,This much LNAPL is in the formation (m3/m2)
+Loam,1,0.084,This much LNAPL is in the formation (m3/m2)
+Sand,1,0.32,This much LNAPL is in the formation (m3/m2)

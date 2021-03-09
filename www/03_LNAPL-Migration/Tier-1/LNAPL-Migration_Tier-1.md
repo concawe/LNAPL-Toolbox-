@@ -1,0 +1,24 @@
+<h1 style="text-align: center;"> LNAPL Body Expansion and Eventual Stabilization Over Time </h1>
+<p align="center">
+<img src="./03_LNAPL-Migration/Tier-1/LNAPL_Migration.png">
+</p>
+<p style="text-align: center;"> <i> ITRC LNAPL Training Part 2: LNAPL Characterization and Recoverability – Improved Analysis, 2016. </i> </p>
+
+<hr class="featurette-divider">
+
+<h4> The figure above shows an example LNAPL body that was released at time 0 and then shows the size of the LNAPL footprint as indicated by monitoring wells over the next three years. The key point is that the footprint of most LNAPL bodies will stabilize after a few years after the release stops. Sale et al. (2018) describe this important point this way:
+<br><br>
+<i>"A primary concern at LNAPL sites has been the potential for lateral expansion or translation of LNAPL bodies. Fortunately, long-term monitoring suggests that the extent of LNAPL bodies at older LNAPL releases tend to be stable, even when potentially mobile LNAPL exist within the LNAPL bodies (Mahler et al. 2012b). An important exception to stable LNAPL bodies is new releases. Historically, the primary explanation for the stability of older LNAPL releases has been low LNAPL saturation (fractions of pore space containing LNAPL) and correspondingly low formations conductivities to LNAPL. More recently, Mahler et al. (2012a) added the argument that natural loses of LNAPL play a critical role in controlling lateral expansion or translation of LNAPL bodies. In general, the threshold condition for expanding LNAPL bodies, at older release sites, is LNAPL release rates that are greater than natural source zone depletion rates. Much like dissolved phase petroleum hydrocarbon plumes, the extent of LNAPL bodies can be strongly limited by natural processes."</i></h4>
+ 
+
+<hr class="featurette-divider">
+<h4>
+LNAPL, 2014. “LNAPL Training Part 2: LNAPL Characterization and Recoverability – Improved Analysis”.
+<br> <br>
+
+Mahler, N., Sale, T., Lyverse, M., 2012a. A mass balance approach to resolving LNAPL stability. Ground Water 50, 861-871. <br> <br>
+
+Mahler, N., T. Sale, T. Smith, and M. Lyverse (2012b). Use of Single-Well Tracer Dilution Tests to Evaluate LNAPL Flux at Seven Field Sites, Journal of Ground Water, Vol. 50, No. 6, pp 851-860. <br><br>
+
+Sale, T., Hopkins, H., Kirkman, A., 2018. Managing Risk at LNAPL Sites. American Petroleum Institute, Washington, DC. <br><br></h4>
+

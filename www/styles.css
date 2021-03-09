@@ -1,0 +1,117 @@
+input[type="number"] {
+  max-width: 100%;
+}
+
+div.outer {
+  position: fixed;
+  top: 35px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+  padding: 0;
+}
+
+div.container-fluid {
+  margin-left: 1%;
+  margin-right: 1%;
+}
+/*Navbar top settings */
+
+.navbar-default {
+  background-color: #005a87 !important;
+  box-shadow: 5px 5px 4px #39bbe2;
+  min-height: 130px;
+}
+
+/*.navbar-default:hover {
+  background-color: #39bbe2 !important;
+  color: white;
+} */
+
+.navbar-nav {
+  padding-left: 50px;
+  padding-top: 40px;
+  font-weight: 400;
+  font-size: 20px;
+}
+
+.navbar-default .navbar-nav > li > a{
+  color:#FFFFFF;
+}
+.navbar-default .navbar-nav > li > a:hover{
+  background-color: #e9b846;
+  color:  #002131;
+}
+
+.navbar .navbar-nav {
+  float: right}
+
+.navbar .navbar-header {
+  float: left;
+}
+
+/* Customize fonts */
+body, label, input, select { 
+  font-family: 'Calbri', Calibri;
+  font-weight: 200;
+  font-size: 14px;
+}
+h1, h2, h3, h4 { font-weight: 400; }
+
+.nav-tabs {
+  font-size: 18px;
+}
+
+#controls {
+  /* Appearance */
+  background-color: white;
+  padding: 0 10px 10px 10px;
+  cursor: move;
+  /* Fade out while not hovering */
+  opacity: 0.75;
+  zoom: 0.9;
+  transition: opacity 500ms 1s;
+}
+
+#controls:hover {
+  /* Fade in while hovering */
+  opacity: 0.75;
+  transition-delay: 0;
+}
+
+#logo {
+
+  /* Appearance */
+
+  background-color: transparent;
+
+  padding: 0 10px 10px 10px;
+
+  cursor: move;
+
+  /* Fade out while not hovering */
+
+  opacity: 0.25;
+
+  zoom: 0.9;
+
+  transition: opacity 500ms 1s;
+
+}
+
+#logo:hover {
+  /* Fade in while hovering */
+  opacity: 0.95;
+  transition-delay: 0;
+}
+
+#img-id{
+  position: fixed;
+  right: 10px;
+  top: 5px;
+}
+
+.dataTables_wrapper { 
+  overflow: auto;
+}

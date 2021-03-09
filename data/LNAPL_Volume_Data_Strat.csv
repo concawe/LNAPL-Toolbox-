@@ -1,0 +1,27 @@
+Location,Layer Top Depth,Layer Bottom Depth,Soil Type
+SB-01,0,3,Silt_CP
+SB-01,3,6,Loamy sand_CP
+SB-01,6,9,Silt loam_CP
+SB-01,9,12,Sandy Silt
+SB-02,0,1,Silt_CP
+SB-02,1,2,Loamy sand_CP
+SB-02,2,3,Silt loam_CP
+SB-02,3,4,Sandy Silt
+SB-02,4,5,Sand_CP
+SB-02,5,6,Clay_CP
+SB-02,6,7,Silt loam_CP
+SB-02,7,8,Sand_CP
+SB-02,8,9,Silty Sand
+SB-02,9,10,Clay_CP
+SB-02,10,11,Sandy clay_CP
+SB-02,11,12,Clay loam_CP
+SB-03,0,0.9,Silt_CP
+SB-03,0.9,1.6,Loamy sand_CP
+SB-03,1.6,2.4,Silt loam_CP
+SB-03,2.4,2.5,Loam_CP
+SB-03,2.5,2.6,Sand_CP
+SB-03,2.6,3.4,Clay_CP
+SB-03,3.4,3.8,Silt loam_CP
+SB-03,3.8,3.9,Sand_CP
+SB-03,3.9,4.7,Silty Sand
+SB-03,4.7,4.8,Clay_CP
