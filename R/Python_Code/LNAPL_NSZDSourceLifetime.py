@@ -7,21 +7,17 @@ import numpy as np
 def argEcho(argName,argValue):
     print(argName, ':', argValue)
 
-# Helper function to round to nearest hundreds place
-def roundup(x):
-    return np.ceil(x / 100.0) * 100
-
 # Natural Source Zone Depletion (NSZD) rate in liters per year
 def NSZD_RateOut(LNAPL_Area,NSZD_Rate1):
-    return round(LNAPL_Area*NSZD_Rate1)
+    return LNAPL_Area*NSZD_Rate1
 
 # Estimate range (in years) when most/all LNAPL will be removed by NSZD
 def NSZD_RemovalRng(LNAPL_Vol,LNAPL_Area,NSZD_Rate1):
     # Calculate NSZD rate - output
     NSZD_Rate2 = NSZD_RateOut(LNAPL_Area,NSZD_Rate1)
     
-    yrRem1 = round(LNAPL_Vol/NSZD_Rate2)
-    yrRem2 = round(-LNAPL_Vol*np.log(0.01)/NSZD_Rate2) # 99% removal for first-order
+    yrRem1 = LNAPL_Vol/NSZD_Rate2
+    yrRem2 = -LNAPL_Vol*np.log(0.01)/NSZD_Rate2 # 99% removal for first-order
     return(yrRem1,yrRem2)
     
 # LNAPL volume as a function of time
@@ -37,12 +33,12 @@ def NSZD_VolOut(LNAPL_Vol,LNAPL_Area,NSZD_Rate1,Yr_start,Yr_end):
         datOut[count,1] = count
         
         if (LNAPL_Vol-(datOut[count,1]*NSZD_Rate2)) > 0:
-            datOut[count,2] = roundup(LNAPL_Vol-(datOut[count,1]*NSZD_Rate2)) # zero-order estimate
+            datOut[count,2] = LNAPL_Vol-(datOut[count,1]*NSZD_Rate2) # zero-order estimate
         else:
             datOut[count,2] = 0 # zero-order estimate
             
         if (LNAPL_Vol*np.exp((-NSZD_Rate2/LNAPL_Vol*datOut[count,1]))) > 0:
-            datOut[count,3] = roundup(LNAPL_Vol*np.exp((-NSZD_Rate2/LNAPL_Vol*datOut[count,1]))) # first-order estimate
+            datOut[count,3] = LNAPL_Vol*np.exp((-NSZD_Rate2/LNAPL_Vol*datOut[count,1])) # first-order estimate
         else:
             datOut[count,3] = 0 # first-order estimate
             
@@ -157,6 +153,7 @@ HISTORY
      Date        Remarks
      ----------  -----------------------------------------------------------
      20201022    Initial script development. (BS)
+     20200504    Removed rounding of output and intermediate calculations - per B. Strasert (BS)
 
 Copyright (c) 2020 GSI Environmental Inc.
 All Rights Reserved
@@ -169,15 +166,15 @@ $Revision: 1.0$ Created on: 2020/10/22
     parser.add_argument('--NSZD_Rate1', type=float, action='store', default=1500.0, help='Natural Source Zone Depletion (NSZD) rate in liters per hectare per year.')
     parser.add_argument('--Yr_start', type=int, action='store', default=1965, help='Output starting year.')
     parser.add_argument('--Yr_end', type=int, action='store', default=2065, help='Output ending year.')
-    #Run the argument parser
+    # Run the argument parser
     args = parser.parse_args()
 
     # Separator
     # print('**********^^^^^^^^^^**********^^^^^^^^^^')
     # print('INPUTS')
     # print('**********^^^^^^^^^^**********^^^^^^^^^^')
-    
-    # Check to ensure that argument values are valid
+    # 
+    # # Check to ensure that argument values are valid
     # if (args.LNAPL_Vol is not None and args.LNAPL_Vol > 0):
     #     argEcho('LNAPL_Vol',args.LNAPL_Vol)
     # else:
@@ -208,11 +205,11 @@ $Revision: 1.0$ Created on: 2020/10/22
     # print('OUTPUTS')
     # print('**********^^^^^^^^^^**********^^^^^^^^^^')
     # 
-    # Calculate NSZD rate - output
+    # # Calculate NSZD rate - output
     # print('NSZD_RateOut:', NSZD_RateOut(args.LNAPL_Area,args.NSZD_Rate1))
-    
-    # Estimate range (in years) when most/all LNAPL will be removed by NSZD
+    # 
+    # # Estimate range (in years) when most/all LNAPL will be removed by NSZD
     # print('NSZD_RemovalRng:', NSZD_RemovalRng(args.LNAPL_Vol,args.LNAPL_Area,args.NSZD_Rate1))
-
-    # Calculate LNAPL volume as a function of time
+    # 
+    # # Calculate LNAPL volume as a function of time
     # print('NSZD_VolOut:', NSZD_VolOut(args.LNAPL_Vol,args.LNAPL_Area,args.NSZD_Rate1,args.Yr_start,args.Yr_end))

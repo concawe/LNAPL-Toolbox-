@@ -93,5 +93,7 @@ Panday, S., P. de Blanc, and R. Falta, in review. Simulation of LNAPL flow in th
 <a href="https://cfpub.epa.gov/si/si_public_record_report.cfm?Lab=NRMRL&dirEntryId=124906" target="_blank">Weaver, J.W., R. Charbeneau, J.D. Tauxe, B.K. Lien, and J.B. Provost, 1994. The Hydrocarbon Spill Screening Model (HSSM) Volume 1: User's Guide EPA/600/R-94/039a</a>
 <br>
 
-
+<div style = "text-align:center;">
+<a class="btn btn-default btn btn-default shiny-download-link shiny-bound-output button2" onclick="window.open('03_LNAPL-Migration/Tier-3/B.  Tier 3 Materials_v3.pdf')" role="button">Download Information</a>
+</div>
 

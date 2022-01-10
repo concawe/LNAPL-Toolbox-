@@ -1,4 +1,3 @@
-#
 # This is the server logic of this Shiny web application. 
 
 library(shiny)

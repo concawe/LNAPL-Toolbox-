@@ -25,3 +25,7 @@ Atlas, R.M. , and R. Bartha. 1986. Microbial Ecology: Fundamentals and Applicati
 Riser-Roberts, E. 1992. Bioremediation of Petroleum Contaminated Sites . Boca Raton, Florida : CRC Press Inc.
 
 <a href="https://pubmed.ncbi.nlm.nih.gov/24469406/" target="_blank">Zeman, N.R. , M.I. Renno , M.R. Olson , L.P. Wilson , T.C. Sale , and S.K. De Long. 2014. Temperature impacts on anaerobic biotransformation of LNAPL and concurrent shifts in microbial community structure . Biodegradation 25: 569– 585.</a>
+
+<div style = "text-align:center;">
+<a class="btn btn-default btn btn-default shiny-download-link shiny-bound-output button2" onclick="window.open('07_NSZD-Estimation/Tier_3/F.  Tier 3 Materials.pdf')" role="button">Download Information</a>
+</div>

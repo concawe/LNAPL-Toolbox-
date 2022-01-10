@@ -1,3 +1,5 @@
+<h3> NSZD Temperature Enhancement Model </h3>   
+
 <h3> What the Model Does </h3>   
 
 Hydrocarbon degradation can be enhanced with increases in temperature (Sustained Thermally Enhanced LNAPL Attenuation [STELA]) (Zeman et al., 2014; Kulkarni et al., 2017). This model uses the Arrhenius Law to estimate the potential NSZD rate enhancement with any externally created temperature increase up to 45 °C. 
@@ -21,7 +23,18 @@ T<sub>2</sub> = Final temperature (°C)<br>
 
 <h3> Key Assumptions </h3>  
 
-For mesophilic anaerobic digestors, optimum temperature range between 30 and 38 °C (Metcalf and Eddy, 1991; Gerardi, 2003). Maximum temperature of 40 °C, after which bacterial populations decline.   
+For mesophilic anaerobic digestors, optimum temperature range between 30 and 38 °C (Metcalf and Eddy, 1991; Gerardi, 2003). Maximum temperature approximated to be 40 °C, after which bacterial populations decline.   
+
+<hr class="featurette-divider">
+
+<h3> Input Data </h3> 
+
+Guidance on the selection of specific input parameters for this tool is provided in <b>Section 9.2.2</b> of the User’s Manual which can be seen here:
+
+<div style = "text-align:center;">
+<a class="btn btn-default btn btn-default shiny-download-link shiny-bound-output button1" onclick="window.open('GSI_Concawe_LNAPL_Manual.pdf#page=55')" role="button">Download User's Manual</a>
+<a class="btn btn-default btn btn-default shiny-download-link shiny-bound-output button1" onclick="window.open('07_NSZD-Estimation/Tier_2/NSZD_Temperature_Enhancement_Calculator_Example.pdf')" role="button">Download Example</a>
+</div>
 
 <hr class="featurette-divider">
 
@@ -44,4 +57,6 @@ Kulkarni, P., 2021.  NSZD Temperature Enhancement Calculator, Concawe LNAPL Tool
 <p>Riser-Roberts, E. 1992. <em>Bioremediation of Petroleum Contaminated Sites</em>. Boca Raton, Florida : CRC Press Inc.</p>
 
 <p>Zeman, N.R. , M.I. Renno , M.R. Olson , L.P. Wilson , T.C. Sale , and S.K. De Long . 2014. Temperature impacts on anaerobic biotransformation of LNAPL and concurrent shifts in microbial community structure. Biodegradation 25: 569–585.</p>
+
+
 

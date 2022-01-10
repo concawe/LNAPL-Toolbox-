@@ -17,7 +17,7 @@ LNAPLPersistUI <- function(id, label = "LNAPL Persistence"){
                                ), # end column 1
                         column(7, align = "center",
                                br(), br(),
-                               img(src="./04_LNAPL-Persist/Tier_1/Persist.png", width = "85%")
+                               img(src="./04_LNAPL-Persist/Tier_1/Persist.png", width = "100%", height = "auto")
                                ) # end column 2
                         ), # end fluid rows
                       fluidRow(
@@ -33,20 +33,25 @@ LNAPLPersistUI <- function(id, label = "LNAPL Persistence"){
                       br(),
                       fluidRow(
                         column(4, style='border-right: 1px solid black',
-                               includeMarkdown("./www/04_LNAPL-Persist/Tier_2/LNAPL-Persist_Tier-2.md")
+                               includeMarkdown("./www/04_LNAPL-Persist/Tier_2/LNAPL-Persist_Tier-2.md"),
+                               br(), br()
                         ), # end column 1
                         column(2,
                                HTML("<h3><b>Inputs:</b></h3>"),
                                numericInput(ns("initial_volume"),"Initial Volume of LNAPL Body (L)", 
                                             value = 250000),
                                numericInput(ns("area"),"Area of LNAPL Body (ha)", value = 5),
-                               numericInput(ns("nszd_rate"),"NSZD Rate (L/ha/yr)", value = 1500),
+                               numericInput(ns("nszd_rate"),"NSZD Rate (L/ha/yr)", value = 15000),
                                numericInput(ns("start_year"),"Model Start Year", value = 1965),
                                numericInput(ns("end_year"),"Model End Year", value = 2065)
                                ), # end column 2
                         column(6, style='border-left: 1px solid black',
-                               plotOutput(ns("LNAPL_Vol_Plot"))
-                               ) # end column 3
+                               fluidRow(align = "center",
+                                 HTML("<h3>LNAPL Body Lifetime assuming constant NSZD rate over time.</h3>"),
+                                 plotOutput(ns("LNAPL_Vol_Plot1")),
+                                 HTML("<h3>LNAPL Body Lifetime assuming NSZD rate decreases proportional to the LNAPL mass remaining.</h3>"),
+                                 plotOutput(ns("LNAPL_Vol_Plot2"))
+                               )) # end column 3
                       ) # end fluid row
              ), # end Tier 2
              ### Tier 3 ------------------------------------
@@ -58,10 +63,6 @@ LNAPLPersistUI <- function(id, label = "LNAPL Persistence"){
                                # Markdown Text
                                br(),
                                includeMarkdown("./www/04_LNAPL-Persist/Tier_3/LNAPL-Persist_Tier-3.md"),
-                               br(),
-                               # Button to download pdf
-                               fluidRow(align = "center",
-                                        downloadButton(ns("download_pdf"), HTML("<br>Download Information"), style=button_style)),
                                br(), br()
                         ), # end column 1
                         column(2,) # end column 2
@@ -120,7 +121,7 @@ LNAPLPersistServer <- function(id) {
       }) # end NSZD_VolOut_get 
 
       # Plot of Temp v Rate
-      output$LNAPL_Vol_Plot <- renderPlot({
+      output$LNAPL_Vol_Plot1 <- renderPlot({
         req(input$initial_volume,
             input$area,
             input$nszd_rate,
@@ -138,37 +139,50 @@ LNAPLPersistServer <- function(id) {
           scale_y_continuous(limits = c(0, NA), expand = expansion(mult = c(0, 0)),
                              labels = scales::label_comma(accuracy = 1, big.mark = ',', decimal.mark = '.')) +
           scale_x_continuous(expand = expansion(mult = c(0, 0))) +
-          labs(x = "\nYear", y = "LNAPL Volume (liters)", title = "LNAPL Body Lifetime assuming\nconstant NSZD rate over time.\n") +
+          labs(x = "\nYear", y = "LNAPL Volume (liters)") +
           scale_color_manual(values = c("Zero-Order" = plot_col[1])) +
           theme + theme(legend.position = c(0.7, 0.9),
-                        plot.title = element_text(size = 16, hjust = 0, face="bold"))
+                        plot.title = element_text(size = 16, hjust = 0.5, face="bold"),
+                        panel.grid.major.x = element_line(color = "grey", linetype = 1, size = 0.5),
+                        panel.grid.major.y =  element_line(color = "grey", linetype = 1, size = 0.5),
+                        panel.grid.minor.y = element_line(color = "grey", linetype = 1, size = 0.25),
+                        panel.grid.minor.x = element_line(color = "grey", linetype = 1, size = 0.25))
+        
+        p1
+
+      }) # end LNAPL_Vol_Plot
+      
+      output$LNAPL_Vol_Plot2 <- renderPlot({
+        req(input$initial_volume,
+            input$area,
+            input$nszd_rate,
+            input$start_year,
+            input$end_year)
+        
+        
+        cd <- as.data.frame(NSZD_VolOut_get())
+        colnames(cd) <- c("Year", "n_yr", "Zero_order", "first_order")
+        cd$Zero_group <- "Zero-Order"
+        cd$First_group <- "First-Order"
         
         p2 <- ggplot(data = cd) +
           geom_path(aes(x = Year, y = first_order, color = First_group), size = 3) +
           scale_y_continuous(limits = c(0, NA), expand = expansion(mult = c(0, 0)),
                              labels = scales::label_comma(accuracy = 1, big.mark = ',', decimal.mark = '.')) +
           scale_x_continuous(expand = expansion(mult = c(0, 0))) +
-          labs(x = "\nYear", y = "LNAPL Volume (liters)", 
-               title = "LNAPL Body Lifetime assuming\nNSZD rate decreases proportional\nto the LNAPL mass remaining.") +
+          labs(x = "\nYear", y = "LNAPL Volume (liters)") +
           scale_color_manual(values = c("First-Order" = plot_col[2])) +
           theme + theme(legend.position = c(0.7, 0.9),
-                        plot.title = element_text(size = 16, hjust = 0, face="bold"))
+                        plot.title = element_text(size = 16, hjust = 0.5, face="bold"),
+                        panel.grid.major.x = element_line(color = "grey", linetype = 1, size = 0.5),
+                        panel.grid.major.y =  element_line(color = "grey", linetype = 1, size = 0.5),
+                        panel.grid.minor.y = element_line(color = "grey", linetype = 1, size = 0.25),
+                        panel.grid.minor.x = element_line(color = "grey", linetype = 1, size = 0.25))
         
         
-        grid.arrange(p1, p2, nrow = 1)
-
+        p2
+        
       }) # end LNAPL_Vol_Plot
-      
-      ## Tier 3 -----------------------------
-      ## Download pdf -----------------------
-      output$download_pdf <- downloadHandler(
-        filename = function(){
-          paste("LNAPL_Persist","pdf",sep=".")
-        },
-        content = function(con){
-          file.copy("./www/04_LNAPL-Persist/Tier_3/C.  Tier 3 Materials_v3.pdf", con)
-        }
-      )# end download_data
       
     }
   )

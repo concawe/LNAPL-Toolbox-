@@ -1,3 +1,5 @@
+<i><b>Information on this page can be downloaded using the button at the bottom of the page.</b></i><br>
+
 The risk posed by the toxic components of an LNAPL plume is a function of the constituents’ concentration in groundwater in contact with the LNAPL. A multi-component LNAPL dissolution model based on the LNAPL constituent mole fraction and Raoult’s law (<a href="https://agupubs.onlinelibrary.wiley.com/doi/book/10.1029/WM017" target="_blank">Mayer and Hassanizadeh, 2005</a>) is provided in Tier 2 and shows how the dissolved constituent concentrations immediately downgradient of an LNAPL body change over time.
 
 A more sophisticated computer tool, <a href="https://www.api.org/oil-and-natural-gas/environment/clean-water/ground-water/lnapl/evaluating-hydrocarbon-removal" target="_blank">API’s LNAST model</a>, also shows the change in dissolved phase LNAPL concentrations over time (<a href="https://www.api.org/oil-and-natural-gas/environment/clean-water/ground-water/lnapl/evaluating-hydrocarbon-removal" target="_blank">Huntley and Beckett, 2002</a>). It is summarized below. Finally, two other key LNAPL attenuation studies, a LNAPL mass balance developed by <a href="https://www.sciencedirect.com/science/article/pii/S0169772214000618?via%3Dihub" target="_blank">Ng et al. (2014)</a> and a <a href="https://apps.dtic.mil/dtic/tr/fulltext/u2/a369582.pdf" target="_blank">2003 report</a> about weathering of jet fuel LNAPL, are also reviewed below.
@@ -26,11 +28,13 @@ A more sophisticated computer tool, <a href="https://www.api.org/oil-and-natural
 A short video to learn more about LNAST can be found here.
 
 <p align="center">
-<iframe width="560" height="315" src="https://www.youtube.com/embed/H8JP8gvZcr8" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/C2F66MNywKk" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe><br><br>
  <button class="btn btn-lg btn-primarys" onclick=" window.open('https://www.api.org/oil-and-natural-gas/environment/clean-water/ground-water/lnapl/evaluating-hydrocarbon-removal','_blank')">Link to LNAPL Dissolution and Transport Screening Tool</button>
 </p>
 
-<h3><b> LNAST Input Data </b></h3>
+<h3><b> Checklist of Input Data for LNAST </b></h3>
+
+Images reproduced courtesy of the American Petroleum Institute from LNAPL Dissolution and Transport Screening Tool, version 2.0.4, February 2006
 
 To use LNAST, the user first indicates the information desired from the tool:
 
@@ -57,6 +61,9 @@ The tool then takes the user through a series of eight input screens to define s
 </p><br><br>
 
 <h3><b> Example of LNAST Output Data </b></h3>
+
+Images reproduced courtesy of the American Petroleum Institute from LNAPL Dissolution and Transport Screening
+Tool, version 2.0.4, February 2006
 
 After performing the selected calculations, LNAST allows users to display results to the screen, create a report, or export the results.
 
@@ -134,5 +141,9 @@ An example of key output for LNAPL recovery in a trench is shown below:
 <br>
 
 <a href="https://apps.dtic.mil/dtic/tr/fulltext/u2/a369582.pdf" target="_blank">Parsons, 2003. Final Light Non-Aqueous Liquid Weathering at Various Fuel Release Sites, 2003 Update. Air Force Center for Environmental Excellence.</a> 
+
+<div style = "text-align:center;">
+<a class="btn btn-default btn btn-default shiny-download-link shiny-bound-output button2" onclick="window.open('05_LNAPL-Risk/Tier_3/LNAPL-Risk-Tier-3-Materials.pdf')" role="button">Download Information</a>
+</div>
 
 

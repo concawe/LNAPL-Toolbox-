@@ -1,3 +1,12 @@
+<hr class="featurette-divider">
+
+<h3> Input Data </h3>
+
+Guidance on the selection of specific input parameters for this tool is provided in <b>Section 9.2.1</b> of the User’s Manual which can be seen here:'
+
+<div style = "text-align:center;">
+<a class="btn btn-default btn btn-default shiny-download-link shiny-bound-output button1" onclick="window.open('GSI_Concawe_LNAPL_Manual.pdf#page=55')" role="button">Download User's Manual</a>
+</div>
 
 <hr class="featurette-divider">
 

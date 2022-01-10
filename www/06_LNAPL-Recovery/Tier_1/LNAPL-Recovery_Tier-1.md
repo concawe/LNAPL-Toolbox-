@@ -1,15 +1,20 @@
 <h3><b>Introduction</b></h3>
 
-<h4>The Texas Risk Reduction Program developed guidance for managing LNAPL in the subsurface and provided a quantitative screening tool for knowing when LNAPL is potentially recoverable using total fluids submersible pumps. This tool was developed by entering certain site conditions into the numerical multiphase transport model ARMOS. Key assumptions included: petroleum hydrocarbon contamination and a single submersible total-fluids recovery pump with an inlet set at depth of 3 feet below static water level. The figure to the right summarizes the results of numerous model simulations configured for different fuel viscosities, hydraulic conductivities, product thicknesses, and recovery system drawdown that are combined with assumptions of what constitutes recovery effectiveness at this site. <br><br>
+<h4>The Texas Risk Reduction Program developed guidance for managing LNAPL in the subsurface and provided a quantitative screening tool for knowing when LNAPL is potentially recoverable using total fluids submersible pumps. This tool was developed by entering certain site conditions into the numerical multiphase transport model ARMOS. Key assumptions included: petroleum hydrocarbon contamination and a single submersible total-fluids recovery pump with an inlet set at depth of 3 feet (1 metre) below static water level. The figure to the right summarizes the results of numerous model simulations configured for different fuel viscosities, hydraulic conductivities, product thicknesses, and recovery system drawdown that are combined with assumptions of what constitutes recovery effectiveness at this site. <br><br>
 
-This LNAPL recoverability screening tool is used this way: 1) select the applicable LNAPL product curve and 2) plot the point that approximates the "true LNAPL thickness" and the hydraulic conductivity of the unit in which the LNAPL is found. If the plotted point is on the right side of the product curve, LNAPL is recoverable using the total fluids system configuration described above. Note the "true LNAPL thickness" is not commonly used now but was meant to estimate the thickness of the LNAPL in the formation with very high LNAPL saturations. It can be estimated by taking the specific volume of LNAPL (see the Tier 1 tab for the first question in this Concawe Toolbox "How much LNAPL is present?" and then dividing by the porosity of the soil containing the LNAPL). Alternatively, an older, less accurate method is to use the chart provided below from 1990 U.S. EPA LNAPL guidance where one can convert the apparent LNAPL thickness in a monitoring well to a "true LNAPL thickness."</h4>
+This tool provides an approximate indicator of recoverability based on the new LNAPL paradigm that soil type and the LNAPL vertical equilibrium model are key recoverability factors.  The Texas Risk Reduction Program described this curve as an example quantitative screen for conventional NAPL recovery and recommended it not be used on a site-specific basis.  However, several members of the original TRRP guidance did feel it could provide a rapid planning level method to evaluate recoverability, and therefore this tool is used as a Tier 1 tool for the Concawe toolbox.  For a more detailed evaluation of recoverability, use the Multi-Site LNAPL Volume and Extent Model (How Much LNAPL is Present, Tier 2) or use the LNAPL transmissivity calculator (Will LNAPL recovery be effective, Tier 2).
+</h4>
+
+<h3 style='color: #ff0000'>Step 1</h3>
+
+<h4>Get the Ratio of Apparent Thickness to “True Thickness” based on soil type (Reidy et al., 1990). </h4>
+
+<h3 style='color: #ff0000'>Step 2</h3>
+
+<h4>Multiply this Ratio by the apparent thickness (measured thickness) in the monitoring well of interest to get a soil type adjusted estimate for True Thickness (the thickness of soil containing LNAPL in the formation).</h4>
+<br>
 
 <p align="center">
-<img src="./06_LNAPL-Recovery/Tier_1/Recovery-Figure-2.png">
-</p>
+<img style = "width: 100%; height auto;" src="./06_LNAPL-Recovery/Tier_1/Recovery-Figure-2.png">
+</p><br><br>
 
-<hr class="featurette-divider">
-
-<h4>Texas Risk Reduction Program, 2008. Risk-Based NAPL Management, TRRP-32. Austin, Texas.<br><br>
-
-Reidy, P.J., Lyman, W.J., Noon, D.C., 1990. Assessing UST Corrective Action Technologies. Early Screening of Clean-up Technologies for the Saturated Zone. U.S. EPA, EPA/600/2-90/027.</h4>

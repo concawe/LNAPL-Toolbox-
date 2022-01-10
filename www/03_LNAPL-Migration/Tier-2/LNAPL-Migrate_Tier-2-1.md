@@ -1,23 +1,18 @@
+<h3> Kirkman LNAPL Body Additional Migration Tool </h3>
+
 <h3> What the Model Does </h3>   
 
-This  tool, sometimes called the Kirkman LNAPL  Body Additional Migration Tool,  calculates the additional distance that the leading edge of an existing LNAPL plume is expected to migrate until it eventually stabilizes in the presence of natural source zone depletion (NSZD). To run the model you need to know three things about your LNAPL body:  1) a representative LNAPL transmissivity from bail down tests or from  transmissivities calculated using the "LNAPL Volume Tier 2 Tool; 2) the measured LNAPL body gradient (the slope of the LNAPL body surface); and 3) the current LNAPL body radius (the model makes a simplifying assumption that the LNAPL body is circular).
+This tool calculates the additional distance that the leading edge of an existing LNAPL plume is expected to migrate until it eventually stabilizes in the presence of natural source zone depletion (NSZD). To run the model you need to know three things about your LNAPL body:  1) a representative LNAPL transmissivity from bail down tests or from  transmissivities calculated using the "LNAPL Volume Tier 2 Tool; 2) the measured LNAPL body gradient (the slope of the LNAPL body surface); and 3) the current LNAPL body radius (the model makes a simplifying assumption that the LNAPL body is circular).
 
 <hr class="featurette-divider">
 
 <h3> How the Model Works </h3>
 
-The model is based on multiple runs of the Hydrocarbon Spill Screening Model (HSSM; Weaver et al., 1994). For each run, an average LNAPL transmissivity (Tn) and gradient (i) were calculated across the oil lens at different times and soil types. These average properties were used as starting conditions to calculate the expected additional growth of an LNAPL plume under an assumed zero-order NSZD rate of 2.0 x 10<sup>-6</sup> m/day using the steady-state relationship for a circular source derived by Mahler (Mahler et al., 2012).<br>
+The model is based on multiple runs of the Hydrocarbon Spill Screening Model (HSSM; Weaver et al., 1994). For each run, an average LNAPL transmissivity (Tn) and gradient (i) were calculated across the oil lens at different times and for different soil types. These average properties were used as starting conditions to calculate the expected additional growth of an LNAPL body under one of five different NSZD rates using the steady-state relationship for a circular source derived by Mahler (Mahler et al., 2012)<br>
 
-The plot shows the calculated LNAPL plume length increase for different average values of LNAPL transmissivity × gradient and piecewise linear fit to the data in the nomograph. <br>
+The plot shows the calculated LNAPL body length increase for different average values of LNAPL transmissivity × gradient and piecewise linear fit to the data in the nomograph.<br>
 
-To use the model, the user enters an LNAPL gradient and transmissivity (in m<sup>2</sup>/d), and the estimated additional LNAPL plume growth is calculated from one of the following two equations:
-
-For Tn × i &le; 4.0 × 10<sup>-4</sup>,<br>
-<p style="margin-left: 40px"> R (m) = 262397 × Tn × i – 20.1</p>
-
-For Tn × i > 4.0 × 10<sup>-4</sup>,<br>
-<p style="margin-left: 40px"> R (m) = 66329 × Tn × i + 61.7</p>
-where R is the length increase of the LNAPL plume in meters.
+To use the model, enter the current LNAPL transmissivity (in m2/d) (see the bottom of the Tier 3 LNAPL Recovery tab), enter the LNAPL gradient (see Section 5.2.1.4 of the User Manual for a description), and select one of five different representative NSZD rates (see Tier 1 of the NSZD Estimation tab). The estimated additional LNAPL body growth from now will be automatically calculated.  The model is a screening level model and will only give a general indication of the potential increase of the LNAPL body, but it will likely be more accurate than older models, such as HSSM, which do not account for NSZD processes. 
 
 <hr class="featurette-divider">
 
@@ -31,9 +26,20 @@ The model is useful for estimating the upper bound of LNAPL migration. However, 
 
 <hr class="featurette-divider">
 
+<h3>Input Data</h3>
+
+Guidance on the selection of specific input parameters for this tool is provided in <b>Section 5.2.1</b> of the User’s Manual which can be seen here:
+
+<div style = "text-align:center;">
+<a class="btn btn-default btn btn-default shiny-download-link shiny-bound-output button1" onclick="window.open('GSI_Concawe_LNAPL_Manual.pdf#page=24')" role="button">Download User's Manual</a>
+<a class="btn btn-default btn btn-default shiny-download-link shiny-bound-output button1" onclick="window.open('03_LNAPL-Migration/Tier-2/LNAPL_Body_Additional_Migration_Tool_Example.pdf')" role="button">Download Example</a>
+</div>
+
+<hr class="featurette-divider">
+
 <h3> Developer </h3> 
 
-This LNAPL tool, sometimes referred to as the Kirkman LNAPL  Body Additional Migration Tool, was developed by Andrew Kirkman of BP.
+This LNAPL tool, referred to as the Kirkman LNAPL  Body Additional Migration Tool, was developed by Andrew Kirkman of BP.
 
 <hr class="featurette-divider">
 

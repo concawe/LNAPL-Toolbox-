@@ -1,10 +1,10 @@
 ﻿Col. 1,Col. 2,Col. 3,Col. 4,Col. 5,Col. 6,Col. 7,Col. 8,Col. 9
-LNAPL Constituent,Gasoline Mole Fraction,Gasoline Mole Fraction,Pure-Phase Solubility (mg/L),Fresh Gasoline Concentration in Water (mg/L),Gasoline Concentration in Water (mg/L),Risk Criteria (mg/L),Fresh Gasoline Relative Risk (RR) (-),Gasoline Relative Risk (RR) (-)
+LNAPL Constituent,Gasoline Mole Fraction,Weathered Gasoline Mole Fraction,Pure-Phase Solubility (mg/L),Fresh Gasoline Concentration in Water (mg/L),Weathered Gasoline Concentration in Water (mg/L),Risk Criteria (mg/L),Fresh Gasoline Relative Risk (RR) (-),Weathered Gasoline Relative Risk (RR) (-)
 Benzene,0.0093,0.0028,"1,750",16,5,0.005,"3,248",986
 Toluene,0.057,0.041,515,29,21,1,29,21
 p-xylene,0.086,0.015,198,17,2.9,10,1.7,0.3
-m-xylene,0.00,0.037,158,0.0,5.9,10,0.0,0.6
-o-xylene,0.00,0.027,175,0.0,4.7,10,0.0,0.5
-Naphthalene,0.003,0.006,32.9,0.11,0.20,0.017,6.5,12
+m-xylene,0,0.037,158,0,5.9,10,0,0.6
+o-xylene,0,0.027,175,0,4.7,10,0,0.5
+Naphthalene,0.003,0.006,32.9,0.11,0.2,0.017,6.5,12
 ,,,,,,Total:,"3,285","1,020"
 ,,,,,,,Percent Reduction in Risk Due to Weathering:,69%

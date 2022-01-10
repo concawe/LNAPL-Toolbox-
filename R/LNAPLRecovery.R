@@ -13,21 +13,23 @@ LNAPLRecoveryUI <- function(id, label = "LNAPL Recovery"){
                         br(),
                         column(5,
                                includeMarkdown("www/06_LNAPL-Recovery/Tier_1/LNAPL-Recovery_Tier-1.md")),
-                        column(7, align = "center",
-                               img(src="06_LNAPL-Recovery/Tier_1/Recovery-Figure-1.png", height = "100%", width = "100%")))
+                        column(7,
+                               includeHTML("www/06_LNAPL-Recovery/Tier_1/LNAPL-Recovery_Tier-1-2.html")))
              ),
              ### Tier 2 ------------------------
              tabPanel(Tier2,
                       tabsetPanel(
                         tabPanel(HTML("<i>LNAPL Model</i>"),
                                  br(),
-                                 includeHTML("./www/06_LNAPL-Recovery/Tier_2/LNAPL-Recovery_Tier-2-1.html")
+                                 includeHTML("./www/06_LNAPL-Recovery/Tier_2/LNAPL-Recovery_Tier-2-1.html"),
+                                 br(),br(),br(),br(),br(),br(),br(),br(),br(),br(),br(),br(),br(),br(),br(),br()
                         ), # LNAPL Model
-                        tabPanel(HTML("<i>Transmissivity & Darcy Flux Calculator</i>"),
+                        tabPanel(HTML("<i>LNAPL Transmissivity Calculator</i>"),
                                  br(),
                                  fluidRow(
                                    column(4, style='border-right: 1px solid black',
-                                          includeMarkdown("www/06_LNAPL-Recovery/Tier_2/LNAPL-Recovery_Tier-2-2.md")
+                                          includeMarkdown("www/06_LNAPL-Recovery/Tier_2/LNAPL-Recovery_Tier-2-2.md"),
+                                          br(), br()
                                    ), # end column 1
                                    column(3, 
                                           HTML("<h3><b>Inputs:</b></h3>"),
@@ -35,12 +37,13 @@ LNAPLRecoveryUI <- function(id, label = "LNAPL Recovery"){
                                                          choices = c("clay", "clay loam", "loam", "loamy sand", "silt",
                                                                      "silt loam", "silty clay", "silty clay loam", "sand",
                                                                      "sandy clay","sandy clay loam","sandy loam","clayey sand",
-                                                                     "clayey silt","coal or black anthracite","fill","gravel","no recovery",
+                                                                     "clayey silt","fill","gravel",
                                                                      "sandy silt","silty sand")),
                                           selectizeInput(ns("LNAPL"),"LNAPL Type",
                                                          choices = c("crude oil", "gasoline", "diesel/kerosene/jetfuel", "heavy fuel oil")),
                                           numericInput(ns("thickness"),"Thickness of LNAPL in Well (m)", value = 10),
-                                          numericInput(ns("delta_thickness"),"Change in LNAPL Elevation (m)", value = 0.01)
+                                          numericInput(ns("delta_thickness"),"LNAPL Gradient (m/m)", value = 0.01),
+                                          HTML("<i>Note: LNAPL Gradient only affects results for LNAPL Darcy Flux and LNAPL Average Seepage Velocity.</i>")
                                    ), # end column 2
                                    column(5, style='border-left: 1px solid black',
                                           gt_output(ns("calc_output")),
@@ -61,10 +64,6 @@ LNAPLRecoveryUI <- function(id, label = "LNAPL Recovery"){
                                # Markdown Text
                                br(),
                                includeMarkdown("./www/06_LNAPL-Recovery/Tier_3/LNAPL-Recovery_Tier-3.md"),
-                               br(),
-                               # Button to download pdf
-                               fluidRow(align = "center",
-                                        downloadButton(ns("download_pdf"), HTML("<br>Download Information"), style=button_style)),
                                br(), br()
                         ), # end column 1
                         column(2,
@@ -81,7 +80,6 @@ LNAPLRecoveryServer <- function(id) {
     id,
     
     function(input, output, session) {
-      ## Tier 2 -----------------------------
       ### Darcy Calc Function ---------------
       darcy_get <- reactive({
         req(input$soil_type,
@@ -116,7 +114,7 @@ LNAPLRecoveryServer <- function(id) {
         
         # Create Table
         cd %>% gt() %>% 
-          tab_header("Transmissivity from Calculator") %>%
+          tab_header("Calculated LNAPL Transmissivity") %>%
           # fmt_scientific(columns = 2, rows = 1, decimals = 2) %>%
           fmt_markdown(columns = vars("Parameters", "Values")) %>%  
           tab_style(style = list(cell_text(style = "italic")),
@@ -133,46 +131,31 @@ LNAPLRecoveryServer <- function(id) {
         # Get Values
         cd <- darcy_get()
         # cd <- darcyCalc("silt","gasoline",10,0.001)
-        values <- as.numeric(t((as.data.frame(cd) %>% select(-Tn)))[,1]) 
+        values <- as.numeric(t((as.data.frame(cd) %>% select(-Tn, -den_r, -vg_M)))[,1])
         
-        parameters <- c('Maximum LNAPL Height (m)', 
+        parameters <- c('Thickness of Formation Containing LNAPL (m)',
                         'Height of LNAPL/<br>Air Interface above Water (m)',
-                        'Relative density (unitless)',
-                        'van Genuchten M (unitless)', 
                         'LNAPL Specific Volume (m<sup>3</sup>/m<sup>2</sup>)',
-                        'LNAPL Mobile Specific Volume (m<sup>3</sup>/m<sup>3</sup>)', 
+                        'LNAPL Mobile Specific Volume (m<sup>3</sup>/m<sup>3</sup>)',
                         'LNAPL Average Relative Permeability (unitless)',
                         'LNAPL Average Hydraulic Conductivity (m/d)',
-                        'LNAPL Darcy Flux (m/d)', 
+                        'LNAPL Darcy Flux (m/d)',
                         'Average LNAPL Volumetric Content (unitless)',
                         'LNAPL Average Seepage Velocity (m/d)')
         
         cd <- data.frame(Parameters = parameters, Values = formatC(values, digits = 2, big.mark = ",", format = "G"))
-        
+
         # Create Table
-        cd %>% gt() %>% 
+        cd %>% gt() %>%
           tab_header("Additional Results from Calculator") %>%
           # fmt_scientific(columns = vars("Values"), decimals = 2) %>%
-          fmt_markdown(columns = vars("Parameters")) %>%  
+          fmt_markdown(columns = vars("Parameters")) %>%
           tab_style(style = list(cell_text(style = "italic")),
                     locations = cells_column_labels(columns = everything())) %>%
           tab_style(style = list(cell_text(weight = "bold")),
                     locations = cells_title(group = "title")) %>%
           opt_table_outline()
       }) # end calc_output2 table
-      
-      ## Tier 3 -----------------------------
-      ## Download pdf -----------------------
-      output$download_pdf <- downloadHandler(
-        filename = function(){
-          paste("LNAPL_Recovery","pdf",sep=".")
-        },
-        content = function(con){
-          file.copy("./www/06_LNAPL-Recovery/Tier_3/E.  Tier 3 Materials_v3.pdf", con)
-        }
-      )# end download_data
-
-
     }
   )
 } # end LNAPLRecoveryServer

@@ -21,10 +21,7 @@ LNAPLPresentUI <- function(id, label = "LNAPL Present"){
                                # Table
                                includeHTML("./www/02_LNAPL-Volume/Tier-1/LNAPL_Present_Table.html"),
                                br(),
-                               # Table Caption
-                               HTML("<p><i>Table developed for Concawe Toolbox 2020 using LNAPL tool developed by<br>
-                               de Blanc, P. and S. K. Farhat, 2018. 25th IPEC: International Petroleum<br>
-                                    Environmental Conference October 30 – November 1, 2018. Denver, Colorado.</i></p>")
+                               includeMarkdown("./www/02_LNAPL-Volume/Tier-1/LNAPL-Volume_Tier-1-2.md")
                                ) # end column 2
                         ) # end fluid row
              ), # end Tier 1
@@ -34,41 +31,44 @@ LNAPLPresentUI <- function(id, label = "LNAPL Present"){
                       fluidRow(
                         column(3, style='border-right: 1px solid black',
                                includeMarkdown("./www/02_LNAPL-Volume/Tier-2/LNAPL-Volume_Tier-2.md"),
-                               br(), br(),
-                               fluidRow(align = "center",
-                               downloadButton(ns("download_user_manual"), "Download Parameter Selection Guide", style=button_style))
+                               br(), br()
                                ), # end column 1
                         column(3, 
                                HTML("<h3><b>Inputs:</b></h3>"),
                                fluidRow(align = "center",
-                                 column(6, 
-                                        downloadButton(ns("download_data"), "Download Data Template", style=button_style),
-                                        br(), br(), br(),
-                                        actionButton(ns("update_inputs"), HTML("Update Input Values<br>(Will Reset Table)"), style=button_style)
-                                        ),
-                                 column(6,
-                                        fileInput("file", "Choose Input File",
-                                                  multiple = F,
-                                                  accept = c("text/xlsx",
-                                                             "text/comma-separated-values,text/plain",
-                                                             ".xlsx")),
-                                        downloadButton(ns("model_results"), HTML("Export Model Results and Input Tables"), style=button_style))
+                                        fluidRow(align = "center",
+                                                 column(6, 
+                                                        downloadButton(ns("download_data"), "Download Data Template", style=button_style),
+                                                        br(), br()),
+                                                 column(6, fileInput(ns("file"), "Choose Input File",
+                                                                     multiple = F,
+                                                                     accept = c("text/xlsx",
+                                                                                "text/comma-separated-values,text/plain",
+                                                                                ".xlsx"), width = "200px"))),
+                                        fluidRow(align = "center",
+                                                 column(6, 
+                                                        actionButton(ns("update_inputs"), HTML("Update Input Values<br>from Input File"), style=button_style),br(),
+                                                        HTML("<i>Will reset all input values.</i>")),
+                                                 column(6,
+                                                        downloadButton(ns("model_results"), HTML("Export Model Results and Input Tables"), style=button_style)))
                                  ), #fluid row 1
                                fluidRow(align = "center",
                                         br(), br(),
                                         numericInput(ns("water_density"),"Water Density (g/cm3)", value=1, min = 0, step = 0.1, width = '200px'),
-                                        numericInput(ns("LNAPL_density"),"LNAPL Density (g/cm3)", value=0.8, min = 0, step = 0.1, width = '200px'),
-                                        numericInput(ns("viscosity"),"LNAPL Viscosity (cp)", value=2, min = 0, width = '200px'),
-                                        numericInput(ns("a_w_tension"),"Air/Water Interfacial Tension (dyn/cm)", value=65, min = 0, width = '200px'),
-                                        numericInput(ns("o_w_tension"),"LNAPL/Water Interfacial Tension (dyn/cm)", value=15, min = 0, width = '200px'),
+                                        numericInput(ns("LNAPL_density"),"LNAPL Density (g/cm3)", value=0.7, min = 0, step = 0.1, width = '200px'),
+                                        numericInput(ns("viscosity"),"LNAPL Viscosity (cp)", value=0.5, min = 0, width = '200px'),
+                                        numericInput(ns("a_w_tension"),"Air/Water Interfacial Tension (dyn/cm)", value=70, min = 0, width = '200px'),
+                                        numericInput(ns("o_w_tension"),"LNAPL/Water Interfacial Tension (dyn/cm)", value=50, min = 0, width = '200px'),
                                         numericInput(ns("a_o_tension"),"Air/LNAPL Interfacial Tension (dyn/cm)", value=25, min = 0, width = '200px'),
                                         numericInput(ns("sat_factor"),"Residual Saturation (f) Factor", value=0.2, min = 0, step = 0.1, width = '200px'),
                                         br(),
-                                        actionButton(ns("calculate"), "Calculate", style=button_style)
+                                        HTML("<i>Click Calculate to Update Maps and Model Output</i>"),br(), br(),
+                                        actionButton(ns("calculate"), "Calculate", style=button_style), br(), br(),
+                                        HTML("<i>Note: If extreme values are entered, model may crash and the website will have to be reloaded.</i>")
                                  ) #fluid row 2
                                ), # end column 2
                         column(5, style='border-left: 1px solid black',
-                               tabsetPanel(
+                               tabsetPanel(id = "Outputs",
                                  tabPanel("Map",
                                           br(),
                                           fluidRow(
@@ -79,16 +79,45 @@ LNAPLPresentUI <- function(id, label = "LNAPL Present"){
                                                                   choices = c("LNAPL Specific Volume", 
                                                                               "Mobile LNAPL Specific Volume", 
                                                                               "Average LNAPL Relative Permeability",
-                                                                              "Maximum Elevation of Free LNAPL", 
+                                                                              "Apparent Thickness of LNAPL", 
                                                                               "Average LNAPL Hydraulic Conductivity",
                                                                               "Average Transmissivity",
                                                                               "LNAPL Unit Flux", 
                                                                               "Average LNAPL Seepage Velocity"),
                                                                   selected = "LNAPL Specific Volume"))),
-                                          leafletOutput(ns("map_holder"), height = 600)
+                                          withSpinner(leafletOutput(ns("map_holder"), height = 600)), br(),
+                                          uiOutput(ns("Heatmap")), br(),
+                                          HTML("<h4><i>Control Parameters for Heatmap:</i></h4>"),
+                                          fluidRow(
+                                            column(4, align = "center", numericInput(ns("radius"), "Radius", value = 15, min = 1, width = '200px')),
+                                            column(4, align = "center", numericInput(ns("blur"), "Blur", value = 30, min = 1, width = '200px')),
+                                            column(4, align = "center", numericInput(ns("max"), "Maximum Point Intensity", value = 0.25, min = 0.00000001, width = '200px')))
                                           ),
+                                 tabPanel("Interpolation", 
+                                          br(),
+                                          fluidRow(
+                                            column(4, 
+                                                   downloadButton(ns("map_export2"), HTML("<br>Save Map"), style=button_style)),
+                                            column(8,
+                                                   selectizeInput(ns("Parameters2"), "Select Parameter to View:",
+                                                                  choices = c("LNAPL Specific Volume", 
+                                                                              "Mobile LNAPL Specific Volume", 
+                                                                              "Average LNAPL Relative Permeability",
+                                                                              "Apparent Thickness of LNAPL", 
+                                                                              "Average LNAPL Hydraulic Conductivity",
+                                                                              "Average Transmissivity",
+                                                                              "LNAPL Unit Flux", 
+                                                                              "Average LNAPL Seepage Velocity"),
+                                                                  selected = "LNAPL Specific Volume"))),
+                                          HTML("<p><i>To refine the area of interpolation use the draw tools in the upper left-hand corner to 
+                                                 draw the area you want to interpolate over. To remove the shape and reset the map click 'Calculate' again. 
+                                               To increase the area of interpolation, include wells (real or fictional) that gave bi apparent LNAPL thickness in the monitoring well database.</i></p>"),
+                                          withSpinner(leafletOutput(ns("nn_map"), height = 600)), br(),
+                                          uiOutput(ns("Total_LNAPLVol")), br(),
+                                          HTML("<p>For more information, or to learn how to perform your own interpolation, go to this 
+                                               <a href='https://rspatial.org/raster/analysis/4-interpolation.html' target='_blank'>tutorial</a>.</p>")),
                                  tabPanel("Model Output",
-                                          DTOutput(ns("Model_DT"), height = 600))
+                                          DTOutput(ns("Model_DT"), height = 600), br(), br())
                                  ),
                                br(), br(),
                                tabsetPanel(
@@ -124,11 +153,6 @@ LNAPLPresentUI <- function(id, label = "LNAPL Present"){
                                # Markdown Text
                                br(),
                                includeMarkdown("./www/02_LNAPL-Volume/Tier-3/LNAPL-Volume_Tier-3.md"),
-                               br(),
-                               # Button to download pdf
-                               fluidRow(align = "center",
-                                        downloadButton(ns("download_pdf"), 
-                                                       HTML("<br>Download Information"), style=button_style)),
                                br(), br()
                         ), # end column 1
                         column(2,) # end column 2
@@ -145,112 +169,17 @@ LNAPLPresentServer <- function(id) {
     
     function(input, output, session) {
       ## Tier 2 ----------------------------------------
-      ## Download Parameter Selection Guide ------------------------
-      output$download_user_manual <- downloadHandler(
-        filename = function(){
-          paste("LDRM_User-and-Parameter-Selection-Guide","pdf",sep=".")
-        },
-        content = function(con){
-          file.copy("./www/02_LNAPL-Volume/Tier-2/LDRM_User_Manual.pdf", con)
-        }
-      )# end download_data
-      
-      
+      ## Reactive Values ------------------------------
       # Defining reactive variables for each input file
       loc <- reactiveVal(default_loc)
       strat <- reactiveVal(default_strat)
       soil <- reactiveVal(default_soil)
       
-      
-      ## Download Data Template ------------------------
-      output$download_data <- downloadHandler(
-        filename = function(){
-          paste("LNAPL_Volume_Data_Template","xlsx",sep=".")
-        },
-        content = function(con){
-          file.copy("./data/LNAPL_Volume_Data_Template.xlsx", con)
-        }
-      )# end download_data
-      
-      ## Export Model Results ---------------------------
-      output$model_results <- downloadHandler(
-        filename = function(){
-          paste("LNAPL_Volume_Model_Results","xlsx",sep=".")
-        },
-        
-        content = function(con){
-          # Model Results
-          
-          cd <- get_mwCalc()
-          
-          cd <- full_join(loc() %>% select("Location", "Date"), cd, by = "Location")
-          
-          colnames(cd) <- c('Location ID', 'Date',
-                            'LNAPL Specific Volume (m3/cm2)',
-                            'Mobile LNAPL Specific Volume (m3/cm2)',
-                            'Avg. LNAPL Relative Permeability',
-                            'Max Elevation of Free LNAPL (m)',
-                            'Avg. LNAPL Hydraulic Conductivity (cm/d)',
-                            'Avg. Transmissivity (m2/d)',
-                            'LNAPL Unit Flux (m2/d)',
-                            'Avg. LNAPL Seepage Velocity (m/d)')
-                                     
-          
-          # Create empty excel file
-          wb <- createWorkbook()
-          
-          # Add Results Tab
-          addWorksheet(wb, "Model_Results")
-          writeData(wb, sheet = "Model_Results", x = cd, startCol = 1, startRow = 1, colNames = T)
-          
-          # Add Location_Information Tab
-          addWorksheet(wb, "Location_Information")
-          writeData(wb, sheet = "Location_Information", x = loc(), startCol = 1, startRow = 1, colNames = T)
-          
-          # Add Stratigraphy Tab
-          addWorksheet(wb, "Stratigraphy")
-          writeData(wb, sheet = "Stratigraphy", x = strat(), startCol = 1, startRow = 1, colNames = T)
-          
-          # Add Soil_Types Tab
-          addWorksheet(wb, "Soil_Types")
-          writeData(wb, sheet = "Soil_Types", x = soil(), startCol = 1, startRow = 1, colNames = T)
-          saveWorkbook(wb, con)
-        }
-      )# end model_results
-      
-      
-      # Function to format excel data input
-      input_file <- reactive({
-        
-        req(input$file)
-        
-        # Organize Location Information
-        loc <- read_xlsx(input$file, sheet = "Location_Information")
-        colnames(loc) <- c("Location", "Date",  "Latitude", "Longitude", "LNAPL_Top_Depth_m", "LNAPL_Bottom_Depth_m", "LNAPL_Gradient")
-        
-        loc <- loc %>% filter(Location != "Add additional rows as needed.")
-        
-        # Organize Stratigraphy
-        strat <- read_xlsx(input$file, sheet = "Stratigraphy")
-        colnames(strat) <- c("Location", "Layer_Top_Depth_m", "Layer_Bottom_Depth_m", "Soil_Type")
-        
-        strat <- strat %>% filter(Location != "Add additional rows as needed.")
-        
-        # Organize Soil_Types
-        soil <- read_xlsx(input$file, sheet = "Soil_Types", skip = 1)
-        colnames(soil) <- c("Soil_Num", "Soil_Type", "Porosity", "Ks_m-d", "Theta_wr", "N", "alpha_m", "M")
-        
-        soil <- soil %>% filter(Soil_Num != "Add additional rows as needed.")
-        
-        data_output <- list(loc = loc, strat = strat, soil = soil)
-        
-        data_output
-        
-      }) # input_file
+      # Defining reactive variable for calculations
+      MW_Calcs <- reactiveVal()
       
       ## Model Calculations (python function) ------------------
-      
-      get_mwCalc <- eventReactive(input$calculate,{
+      observeEvent(input$calculate,{
         
         req(input$water_density,
             input$LNAPL_density,
@@ -261,7 +190,7 @@ LNAPLPresentServer <- function(id) {
             input$sat_factor)
         
         data_in <- list(loc = loc(), strat = strat(), soil = soil())
-
+        
         validate(need(sum(!(unique(loc()$Location) %in% unique(strat()$Location))) == 0, "Location IDs do not match between Location Information and Stratigraphy Tables.")) 
         # validate(need(sum(!(unique(strat()$Soil_Type) %in% unique(soil()$Soil_Type))) == 0, "Soil Types do not match between Stratigraphy and Soil Tables."))
 
@@ -283,86 +212,401 @@ LNAPLPresentServer <- function(id) {
         # Strat
         stratt <- data_in[["strat"]]
         
-        cd <- mwCalc(waterDensity = input$water_density,
-                     lnaplDensity = input$LNAPL_density,
-                     lnaplViscosity = input$viscosity,
-                     airWaterTension = input$a_w_tension,
-                     lnaplWaterTension = input$o_w_tension,
-                     lnaplAirTension = input$a_o_tension,
-                     lnaplResidSatFact = input$sat_factor,
-                     locR = loct,
-                     soilR = soilt,
-                     stratR = stratt)
-        # Assign Variable names to list items 
+        cd <- tryCatch({mwCalc(waterDensity = input$water_density,
+                               lnaplDensity = input$LNAPL_density,
+                               lnaplViscosity = input$viscosity,
+                               airWaterTension = input$a_w_tension,
+                               lnaplWaterTension = input$o_w_tension,
+                               lnaplAirTension = input$a_o_tension,
+                               lnaplResidSatFact = input$sat_factor,
+                               locR = loct,
+                               soilR = soilt,
+                               stratR = stratt)
+              #when it throws an error, the following block catches the error
+            }, error = function(msg){
+              print("Error with Inputs")
+            })
+
+        
+        if(cd != "Error with Inputs"){
+        # Assign Variable names to list items
         for(i in 1:length(cd)){
+          cd[[i]] <- as.character(cd[[i]])
           names(cd[[i]]) <- c("Do_m3_cm2", "Do_mobile_m3_cm2", "kro_avg", "zmax_m", "KLNAPL_avg_cm_d", "T_avg_m2_d", "ULNAPL_m2_d", "vLNAPL_avg_m_d")
         }
         
         # Change list into DF
-        cd <- map_dfr(1:length(cd), ~c(Location = names(cd[.x]), cd[[.x]]))
-        cd <- cd %>% 
+        cd <- map_dfr(1:length(cd), 
+                      ~c(Location = names(cd[.x]),cd[[.x]]))
+        cd <- cd %>%
           mutate(across(-Location, as.numeric))
         
-        cd
+        #Convert Units
+        cd$Do_m3_m2 <- cd$Do_m3_cm2
+        cd$Do_mobile_m3_m2 <- cd$Do_mobile_m3_cm2
         
-      }) # end get_mwCalc
+        cd <- cd %>% select(Location, Do_m3_m2, Do_mobile_m3_m2, kro_avg, zmax_m, KLNAPL_avg_cm_d, T_avg_m2_d, ULNAPL_m2_d, vLNAPL_avg_m_d)
+        }
+        MW_Calcs(cd)
+        
+      }) # end mwCalc
       
-      ## update_inputs Button ----------------------------
+      ## Function to Filter Map Data
+      map_cd <- reactive({
+        validate(need(!is.null(MW_Calcs()), 'Click Calculate'))
+        validate(need(MW_Calcs() != "Error with Inputs", 'Please Check Input Values'))
+        
+        results <-  MW_Calcs()
+        
+        results <- full_join(loc(), results, by = "Location")
+        x <- input$Parameters
+        
+        # Filter Results by Chosen Parameter
+        var <- case_when(
+          x == "LNAPL Specific Volume" ~  "Do_m3_m2",
+          x == "Mobile LNAPL Specific Volume" ~ "Do_mobile_m3_m2",
+          x == "Average LNAPL Relative Permeability" ~ "kro_avg",
+          x == "Apparent Thickness of LNAPL" ~ "zmax_m",
+          x == "Average LNAPL Hydraulic Conductivity" ~ "KLNAPL_avg_cm_d",
+          x == "Average Transmissivity" ~ "T_avg_m2_d",
+          x == "LNAPL Unit Flux" ~ "ULNAPL_m2_d",
+          x == "Average LNAPL Seepage Velocity" ~ "vLNAPL_avg_m_d")
+        
+        # Defining Units
+        units <- case_when(
+          x == "LNAPL Specific Volume" ~  "cm<sup>3</sup>/cm<sup>2</sup>",
+          x == "Mobile LNAPL Specific Volume" ~ "cm<sup>3</sup>/cm<sup>2</sup>",
+          x == "Average LNAPL Relative Permeability" ~ "",
+          x == "Apparent Thickness of LNAPL" ~ "m",
+          x == "Average LNAPL Hydraulic Conductivity" ~ "cm/d",
+          x == "Average Transmissivity" ~ "cm<sup>2</sup>/d",
+          x == "LNAPL Unit Flux" ~ "cm<sup>2</sup>/d",
+          x == "Average LNAPL Seepage Velocity" ~ "cm/d")
+        
+        # Defining Color
+        color <- case_when(
+          x == "LNAPL Specific Volume" ~  plot_col[1],
+          x == "Mobile LNAPL Specific Volume" ~ plot_col[1],
+          x == "Average LNAPL Relative Permeability" ~ plot_col[2],
+          x == "Apparent Thickness of LNAPL" ~ plot_col[3],
+          x == "Average LNAPL Hydraulic Conductivity" ~ plot_col[4],
+          x == "Average Transmissivity" ~ plot_col[5],
+          x == "LNAPL Unit Flux" ~ plot_col[6],
+          x == "Average LNAPL Seepage Velocity" ~ plot_col[7])
+        
+        cd <- results %>% select(Location, Date, Latitude, Longitude, Result = !!var) %>%
+          mutate(pop = paste0("Location ID: ", Location, "<br>",
+                              "Date: ", Date, "<br>",
+                              x, ": ", signif(Result, 3), " ", units),
+                 color = color)
+        cd
+      })# end map_cd
+      
+      ## Org Data for Nearest Neighbor -------------
+      map_cd_nn <- reactive({
+        
+        validate(need(!is.null(MW_Calcs()), 'Click Calculate'))
+        validate(need(MW_Calcs() != "Error with Inputs", 'Please Check Input Values'))
+        results <-  MW_Calcs()
+        results <- full_join(loc(), results, by = "Location")
+        x <- input$Parameters2
+        
+        # Filter Results by Chosen Parameter
+        var <- case_when(
+          x == "LNAPL Specific Volume" ~  "Do_m3_m2",
+          x == "Mobile LNAPL Specific Volume" ~ "Do_mobile_m3_m2",
+          x == "Average LNAPL Relative Permeability" ~ "kro_avg",
+          x == "Apparent Thickness of LNAPL" ~ "zmax_m",
+          x == "Average LNAPL Hydraulic Conductivity" ~ "KLNAPL_avg_cm_d",
+          x == "Average Transmissivity" ~ "T_avg_m2_d",
+          x == "LNAPL Unit Flux" ~ "ULNAPL_m2_d",
+          x == "Average LNAPL Seepage Velocity" ~ "vLNAPL_avg_m_d")
+        
+        # Defining Units
+        units <- case_when(
+          x == "LNAPL Specific Volume" ~  "cm<sup>3</sup>/cm<sup>2</sup>",
+          x == "Mobile LNAPL Specific Volume" ~ "cm<sup>3</sup>/cm<sup>2</sup>",
+          x == "Average LNAPL Relative Permeability" ~ "",
+          x == "Apparent Thickness of LNAPL" ~ "m",
+          x == "Average LNAPL Hydraulic Conductivity" ~ "cm/d",
+          x == "Average Transmissivity" ~ "cm<sup>2</sup>/d",
+          x == "LNAPL Unit Flux" ~ "cm<sup>2</sup>/d",
+          x == "Average LNAPL Seepage Velocity" ~ "cm/d")
+        
+        # Defining Color
+        color <- case_when(
+          x == "LNAPL Specific Volume" ~  plot_col[1],
+          x == "Mobile LNAPL Specific Volume" ~ plot_col[1],
+          x == "Average LNAPL Relative Permeability" ~ plot_col[2],
+          x == "Apparent Thickness of LNAPL" ~ plot_col[3],
+          x == "Average LNAPL Hydraulic Conductivity" ~ plot_col[4],
+          x == "Average Transmissivity" ~ plot_col[5],
+          x == "LNAPL Unit Flux" ~ plot_col[6],
+          x == "Average LNAPL Seepage Velocity" ~ plot_col[7])
+        
+        cd <- results %>% select(Location, Date, Latitude, Longitude, Result = !!var, 
+                                 Do_m3_m2_fin = Do_m3_m2, 
+                                 Do_mobile_m3_m2_fin = Do_mobile_m3_m2) %>%
+          mutate(pop = paste0("Location ID: ", Location, "<br>",
+                              "Date: ", Date, "<br>",
+                              x, ": ", signif(Result, 3), " ", units),
+                 color = color)
+        cd
+      })# end map_cd_nn
+      
+      ## Nearest Neighbor Polygon Calculations  ------------------------
+      v_used <- reactiveVal() # save values used in map
+      
+      # Default intrep
+      near_neigh <- reactive({
+        cd <-  map_cd_nn() %>% na.omit()
+        
+        req(dim(cd)[1] > 3) # Need at least 3 points to do intreperlation
+        
+        dsp <- SpatialPoints(cd[,c("Longitude", "Latitude")], proj4string=CRS("+proj=longlat +datum=NAD83"))
+        dsp <- SpatialPointsDataFrame(dsp, cd)
+        
+        v <- voronoi(dsp)
+        
+        v
+      }) # end near_neigh
+      
+      # Intrp with Polygon
+      near_neigh_poly <- reactive({
+        req(input$nn_map_draw_stop)
+        cd <-  map_cd_nn()  %>% na.omit()
+        
+        req(dim(cd)[1] > 3) # Need at least 3 points to do intreperlation
+        
+        feature_type <- input$nn_map_draw_new_feature$properties$feature_type
+        cd <- map_cd_nn()
+        coordinates <- SpatialPointsDataFrame(cd[,c("Longitude","Latitude")],cd)
+        
+        if(feature_type %in% c("rectangle","polygon")) {
+          #get the coordinates of the polygon
+          polygon_coordinates <- input$nn_map_draw_new_feature$geometry$coordinates[[1]]
+          req(polygon_coordinates)
+          #transform them to an sp Polygon
+          drawn_polygon <- Polygon(do.call(rbind,lapply(polygon_coordinates,function(x){c(x[[1]][1],x[[2]][1])})))
+          
+          #use over from the sp package to identify selected cities
+          selected_wells <- coordinates %over% SpatialPolygons(list(Polygons(list(drawn_polygon),"drawn_polygon")))
+          
+          cd <- cd[which(!is.na(selected_wells)),]
+          
+          dsp <- SpatialPoints(cd[,c("Longitude", "Latitude")], proj4string=CRS("+proj=longlat +datum=NAD83"))
+          dsp <- SpatialPointsDataFrame(dsp, cd)
+          
+          v <- voronoi(dsp)
+          v <- intersect(v,aggregate(SpatialPolygons(list(Polygons(list(drawn_polygon),"drawn_polygon")))))
+          v
+        }
+      }) # end near_neigh_poly
+      
+      ## Download Parameter Selection Guide ------------------------
+      output$download_user_manual <- downloadHandler(
+        filename = function(){
+          paste("LDRM_User-and-Parameter-Selection-Guide","pdf",sep=".")
+        },
+        content = function(con){
+          file.copy("./www/02_LNAPL-Volume/Tier-2/LDRM_User_Manual.pdf", con)
+        }
+      )# end download_data
+      
+      ## Download Model Example ------------------------
+      output$download_ex <- downloadHandler(
+        filename = function(){
+          paste("LNAPL_Volume_and_Extent_Model_Example","pdf",sep=".")
+        },
+        content = function(con){
+          file.copy("./www/02_LNAPL-Volume/Tier-2/LNAPL_Volume_and_Extent_Model_Example.pdf", con)
+        }
+      )# end download_data
+      
+      ## Download Model Example ------------------------
+      output$download_soil_class <- downloadHandler(
+        filename = function(){
+          paste("Soil-Classification","pdf",sep=".")
+        },
+        content = function(con){
+          file.copy("./www/02_LNAPL-Volume/Tier-2/Soil-Classification.pdf", con)
+        }
+      )# end download_data
+
+      ## Download Data Template ------------------------
+      output$download_data <- downloadHandler(
+        filename = function(){
+          paste("LNAPL_Volume_Data_Template","xlsx",sep=".")
+        },
+        content = function(con){
+          file.copy("./data/LNAPL_Volume_Data_Template.xlsx", con)
+        }
+      )# end download_data
+
+      ## Export Model Results ---------------------------
+      output$model_results <- downloadHandler(
+        filename = function(){
+          paste("LNAPL_Volume_Model_Results","xlsx",sep=".")
+        },
+
+        content = function(con){
+          # Model Results
+          cd <- MW_Calcs()
+          validate(need(cd != "Error with Inputs", 'Please Check Input Values'))
+
+          cd <- full_join(loc() %>% select("Location", "Date"), cd, by = "Location")
+
+          colnames(cd) <- c('Monitoring Well', 'Date',
+                            'LNAPL Specific Volume (cm3/cm2)',
+                            'Mobile LNAPL Specific Volume (cm3/cm2)',
+                            'Avg. LNAPL Relative Permeability',
+                            'Apparent Thickness of LNAPL (m)',
+                            'Avg. LNAPL Hydraulic Conductivity (cm/d)',
+                            'Avg. Transmissivity (cm2/d)',
+                            'LNAPL Unit Flux (cm2/d)',
+                            'Avg. LNAPL Seepage Velocity (cm/d)')
+
+
+          # Create empty excel file
+          wb <- createWorkbook()
+
+          # Add Results Tab
+          addWorksheet(wb, "Model_Results")
+          writeData(wb, sheet = "Model_Results", x = cd, startCol = 1, startRow = 1, colNames = T)
+
+          # Add Location_Information Tab
+          cd <- loc()
+          colnames(cd) <- c("Monitoring Well",
+                            "Date", "Latitude", "Longitude",
+                            "LNAPL Top Depth Below Ground Surface (m)",
+                            "LNAPL Bottom Depth Below Ground Surface (m)",
+                            "LNAPL Gradient (m/m)")
+
+          addWorksheet(wb, "Location_Information")
+          writeData(wb, sheet = "Location_Information", x = cd, startCol = 1, startRow = 1, colNames = T)
+
+          # Add Stratigraphy Tab
+          cd <- strat()
+          colnames(cd) <- c("Monitoring Well",
+                            "Layer Top Depth Below Ground Surface (m)",
+                            "Layer Bottom Depth Below Ground Surface (m)",
+                            "Soil Type")
+
+          addWorksheet(wb, "Stratigraphy")
+          writeData(wb, sheet = "Stratigraphy", x = cd, startCol = 1, startRow = 1, colNames = T)
+
+          # Add Soil_Types Tab
+          cd <- soil()
+          colnames(cd) <- c("Soil Num", "Soil_Type", "Porosity", "Ks (m/d)", "Theta_wr", "N", "alpha (1/m)", "M")
+
+          addWorksheet(wb, "Soil_Types")
+          writeData(wb, sheet = "Soil_Types", x = cd, startCol = 1, startRow = 2, colNames = T)
+          writeData(wb, sheet = "Soil_Types", x = "van Genuchten Parameters", startCol = 6, startRow = 1, colNames = T)
+          writeData(wb, sheet = "Soil_Types", x = "Soil Types", startCol = 1, startRow = 1, colNames = T)
+          mergeCells(wb, sheet = "Soil_Types", cols = 6:8, rows = 1)
+          mergeCells(wb, sheet = "Soil_Types", cols = 1:5, rows = 1)
+
+          # Add Parameters Tab
+          x <- data.frame(c("Water Density (g/cm3)", input$water_density),
+                          c("LNAPL Density (g/cm3)", input$LNAPL_density),
+                          c("LNAPL Viscosity (cp)", input$viscosity),
+                          c("Air/Water Interfacial Tension (dyn/cm)", input$a_w_tension),
+                          c("LNAPL/Water Interfacial Tension (dyn/cm)", input$o_w_tension),
+                          c("Air/LNAPL Interfacial Tension (dyn/cm)", input$a_o_tension),
+                          c("Residual Saturation (f) Factor", input$sat_factor))
+
+          addWorksheet(wb, "Parameters")
+          writeData(wb, sheet = "Parameters", x = x, startCol = 1, startRow = 1, colNames = F)
+
+          saveWorkbook(wb, con)
+        }
+      )# end model_results
+
+      ## Update Input Button ----------------------------
       # update_inputs Button (updates DT and input variables)
       observeEvent(input$update_inputs,{
-        
-        if(is.null(input$file)){
-          loc_x <- default_loc
-          strat_x <- default_strat
-          soil_x <- default_soil
-        }else{
-          loc_x <- input_file()[["loc"]]
-          strat_x <- input_file()[["strat"]]
-          soil_x <- input_file()[["soil"]]
+
+        # If no file is loaded use deaf
+        if(!is.null(input$file)){
+          file <- input$file
+          
+          # Organize Location Information
+          loc <- read_xlsx(file$datapath, sheet = "Location_Information", range = cell_cols("A:G"),
+                           col_types = c("text", "text", "numeric", "numeric", "numeric", "numeric", "numeric")) %>%
+            select(Location = `Monitoring Well`,
+                   Date, Latitude, Longitude,
+                   LNAPL_Top_Depth_m = `LNAPL Top Depth Below Ground Surface (m)`,
+                   LNAPL_Bottom_Depth_m = `LNAPL Bottom Depth Below Ground Surface (m)`,
+                   LNAPL_Gradient = `LNAPL Gradient (m/m)`) %>%
+            filter(Location != "Add additional rows as needed.") %>%
+            mutate(Date = as.character(Date))
+          
+          # Organize Stratigraphy
+          strat <- read_xlsx(file$datapath, sheet = "Stratigraphy", range = cell_cols("A:D"),
+                             col_types = c("text", "numeric", "numeric", "text")) %>%
+            select(Location = `Monitoring Well`,
+                   Layer_Top_Depth_m = `Layer Top Depth Below Ground Surface (m)`,
+                   Layer_Bottom_Depth_m = `Layer Bottom Depth Below Ground Surface (m)`,
+                   Soil_Type = `Soil Type`) %>%
+            filter(Location != "Add additional rows as needed.")
+          
+          # Organize Soil_Types
+          soil <- read_xlsx(file$datapath, sheet = "Soil_Types", range = cell_cols("A:H"),
+                            col_types = c("text", "text", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric")) %>%
+            na.omit() %>%
+            select(Soil_Num = 1, Soil_Type = 2, Porosity = 3, `Ks_m-d` = 4, Theta_wr = 5, N = 6, alpha_m = 7, M = 8) %>% 
+            mutate(Soil_Num = as.numeric(Soil_Num))
+          
+          # Organize Parameters
+          par <- read_xlsx(file$datapath, sheet = "Parameters", col_types = "numeric") %>%
+            select(water_den_gcm3 = `Water Density (g/cm3)`, LNAPL_den_gcm3 = `LNAPL Density (g/cm3)`, LNAPL_vis_cp = `LNAPL Viscosity (cp)`,
+                   air_water_ten_dcm = `Air/Water Interfacial Tension (dyn/cm)`, LNAPL_water_ten_dcm = `LNAPL/Water Interfacial Tension (dyn/cm)`,
+                   air_LNAPL_ten_dcm = `Air/LNAPL Interfacial Tension (dyn/cm)`, res_sat = `Residual Saturation (f) Factor`)
+          
+          data_output <- list(loc = loc, strat = strat, soil = soil, para = par)
+
+          # Update Tables
+          loc(data_output[["loc"]])
+          strat(data_output[["strat"]])
+          soil(data_output[["soil"]])
+
+          # Update Parameters
+          para_x <- data_output[["para"]]
+
+          updateNumericInput(session = session, "water_density", value = para_x$water_den_gcm3)
+          updateNumericInput(session = session, "LNAPL_density", value = para_x$LNAPL_den_gcm3)
+          updateNumericInput(session = session, "viscosity", value = para_x$LNAPL_vis_cp)
+          updateNumericInput(session = session, "a_w_tension", value = para_x$air_water_ten_dcm)
+          updateNumericInput(session = session, "o_w_tension", value = para_x$LNAPL_water_ten_dcm)
+          updateNumericInput(session = session, "a_o_tension", value = para_x$air_LNAPL_ten_dcm)
+          updateNumericInput(session = session, "sat_factor", value = para_x$res_sat)
+
         }
-        
-        # Set Location Variable
-        col_loc <- c("Location", "Date",  "Latitude", "Longitude", "LNAPL_Top_Depth_m", "LNAPL_Bottom_Depth_m", "LNAPL_Gradient")
-        colnames(loc_x) <- col_loc
-        
-        loc(loc_x)
-        
-        # Set Strat Variable
-        col_strat <- c("Location", "Layer_Top_Depth_m", "Layer_Bottom_Depth_m", "Soil_Type")
-        colnames(strat_x) <- col_strat
-        
-        strat(strat_x)
-        
-        # Set Soil Type Variable
-        col_soil <- c("Soil_Num", "Soil_Type", "Porosity", "Ks_m-d", "Theta_wr", "N", "alpha_m", "M")
-        colnames(soil_x) <- col_soil
-        
-        soil(soil_x)
       }) # end update_inputs button
       
       ## Data Table: Location Info ----------------
       # Create Location Table
       output$loc_info <- renderDT(loc(), server = FALSE, editable = TRUE, selection = "none",
-                                  colnames = c("Location", "Date", "Latitude", "Longitude", "LNAPL Top Elevation (m)", "LNAPL Bottom Elevation (m)", "LNAPL Gradient"),
-                                  options = list(lengthChange = TRUE, 
+                                  colnames = c("Location", "Date", "Latitude", "Longitude", "LNAPL Top Depth (m)", "LNAPL Bottom Depth (m)", "LNAPL Gradient"),
+                                  options = list(lengthChange = TRUE,
                                                  columnDefs = list(list(className = 'dt-center', targets = "_all"))))
       
-      # store a proxy of tbl 
+      # store a proxy of tbl
       proxy_loc <- dataTableProxy(outputId = "loc_info")
       
       # each time addData is pressed, add user_table to proxy
       observeEvent(eventExpr = input$addData_loc, {
         # Create Empty row
-        user_table_loc <- loc() %>% 
-          slice(1) %>% 
+        user_table_loc <- loc() %>%
+          slice(1) %>%
           replace(values = "")
         rownames(user_table_loc) <- dim(loc())[1] + 1
         
-        #Page row will appear on 
+        #Page row will appear on
         pg <- ceiling((dim(loc())[1] + 1)/10)
         
         # Add empty row to table
-        proxy_loc %>% 
+        proxy_loc %>%
           addRow(user_table_loc) %>%
           selectPage(pg)
       }) # end add row event
@@ -375,25 +619,25 @@ LNAPLPresentServer <- function(id) {
       ## Data Table: Strat ----------------
       # Create Table
       output$Strat <- renderDT(strat(), server = FALSE, editable = TRUE, selection = "none",
-                               colnames = c("Location", "Layer Top Elevation (m)", "Layer Bottom Elevation (m)", "Soil Type"),
-                                  options = list(lengthChange = TRUE,
-                                                 columnDefs = list(list(className = 'dt-center', targets = "_all"))))
-      # store a proxy of tbl 
+                               colnames = c("Location", "Layer Top Depth (m)", "Layer Bottom Depth (m)", "Soil Type"),
+                               options = list(lengthChange = TRUE,
+                                              columnDefs = list(list(className = 'dt-center', targets = "_all"))))
+      # store a proxy of tbl
       proxy_strat <- dataTableProxy(outputId = "Strat")
       
       # each time addData is pressed, add user_table to proxy
       observeEvent(eventExpr = input$addData_strat, {
         # Create Empty row
-        user_table_strat <- strat() %>% 
-          slice(1) %>% 
+        user_table_strat <- strat() %>%
+          slice(1) %>%
           replace(values = "")
         rownames(user_table_strat) <- dim(strat())[1] + 1
         
-        #Page row will appear on 
+        #Page row will appear on
         pg <- ceiling((dim(strat())[1] + 1)/10)
         
         # Add empty row to table
-        proxy_strat %>% 
+        proxy_strat %>%
           addRow(user_table_strat)%>%
           selectPage(pg)
       }) # end add row event
@@ -407,24 +651,24 @@ LNAPLPresentServer <- function(id) {
       # Create Table
       output$soil <- renderDT(soil(), server = FALSE, editable = TRUE, selection = "none",
                               colnames =  c("Soil Number", "Soil Type", "Porosity", "Ks (m/d)", "Theta_wr", "N", "alpha (1/m)", "M"),
-                               options = list(lengthChange = TRUE,
-                                              columnDefs = list(list(className = 'dt-center', targets = "_all"))))
-      # store a proxy of tbl 
+                              options = list(lengthChange = TRUE,
+                                             columnDefs = list(list(className = 'dt-center', targets = "_all"))))
+      # store a proxy of tbl
       proxy_soil <- dataTableProxy(outputId = "soil")
       
       # each time addData is pressed, add user_table to proxy
       observeEvent(eventExpr = input$addData_soil, {
         # Create Empty row
-        user_table_soil <- soil() %>% 
-          slice(1) %>% 
+        user_table_soil <- soil() %>%
+          slice(1) %>%
           replace(values = "")
         rownames(user_table_soil) <- dim(soil())[1] + 1
         
-        #Page row will appear on 
+        #Page row will appear on
         pg <- ceiling((dim(soil())[1] + 1)/10)
         
         # Add empty row to table
-        proxy_soil %>% 
+        proxy_soil %>%
           addRow(user_table_soil) %>%
           selectPage(pg)
       }) # end add row event
@@ -436,68 +680,176 @@ LNAPLPresentServer <- function(id) {
       
       ## Map of Results ---------------------------------
       output$map_holder <- renderLeaflet({
-        gen_map
+        gen_map %>%
+          addLayersControl(baseGroups = c('Base','Roads (Google)','Topo (ESRI)','Topo (Google)','Satellite (ESRI)','Satellite (Google)','Hybrid (Google)'),
+                           overlayGroups = c("Wells"),
+                           position = "bottomleft",
+                           options = layersControlOptions(collapsed = FALSE)) 
       }) # end map_holder
       
-      ## Function to Filter Map Data
-      map_cd <- reactive({
-        results <-  get_mwCalc()
-        results <- full_join(loc(), results, by = "Location")
-        x <- input$Parameters
+      # Update Map with Results
+      observeEvent({
+        input$Parameters
+        input$calculate
+        input$radius
+        input$max
+        input$blur
+        },{
+          
+          # Remove markers
+          proxy <- leafletProxy("map_holder") %>%
+            clearMarkers() %>%
+            removeControl(layerId = "Legend") %>%
+            clearGroup("heatmap")
 
-        # Filter Results by Chosen Parameter
-        var <- case_when(
-          x == "LNAPL Specific Volume" ~  "Do_m3_cm2",
-          x == "Mobile LNAPL Specific Volume" ~ "Do_mobile_m3_cm2",
-          x == "Average LNAPL Relative Permeability" ~ "kro_avg",
-          x == "Maximum Elevation of Free LNAPL" ~ "zmax_m",
-          x == "Average LNAPL Hydraulic Conductivity" ~ "KLNAPL_avg_cm_d",
-          x == "Average Transmissivity" ~ "T_avg_m2_d",
-          x == "LNAPL Unit Flux" ~ "ULNAPL_m2_d",
-          x == "Average LNAPL Seepage Velocity" ~ "vLNAPL_avg_m_d")
+          cd <- map_cd() %>% na.omit()
 
+          validate(need(dim(cd)[1] > 0, ''))
+          validate(need(input$radius > 0, ''))
+          validate(need(input$max > 0, ''))
+          validate(need(input$blur >= 1, ''))
+          
+          x <- input$Parameters
+            
+          # Defining Units
+          units <- case_when(
+            x == "LNAPL Specific Volume" ~  "(cm<sup>3</sup>/cm<sup>2</sup>)",
+            x == "Mobile LNAPL Specific Volume" ~ "(cm<sup>3</sup>/cm<sup>2</sup>)",
+            x == "Average LNAPL Relative Permeability" ~ "",
+            x == "Apparent Thickness of LNAPL" ~ "(m)",
+            x == "Average LNAPL Hydraulic Conductivity" ~ "(cm/d)",
+            x == "Average Transmissivity" ~ "(cm<sup>2</sup>/d)",
+            x == "LNAPL Unit Flux" ~ "(cm<sup>2</sup>/d)",
+            x == "Average LNAPL Seepage Velocity" ~ "(cm/d)")
+          
+          
+          pal <- colorNumeric(c("white","blue"), cd$Result,
+                              na.color = "transparent")
+          
+          proxy <- proxy  %>%
+            fitBounds(min(cd$Longitude), min(cd$Latitude), max(cd$Longitude), max(cd$Latitude)) %>%
+            addCircleMarkers(data = cd, lng = ~Longitude, lat = ~Latitude,
+                             layerId = ~Location, group = "Wells",
+                             popup = ~pop,
+                             color = "black", fillColor = ~color, radius=4, stroke = TRUE,
+                             fillOpacity = 0.8, weight = .5, opacity = .8) %>%
+            addHeatmap(data =cd, lng = ~Longitude, lat = ~Latitude, intensity = ~Result, gradient = "blue",
+                       max = input$max, blur = input$blur, radius = input$radius, group = "heatmap") %>%
+            addLegend("bottomright", pal = pal, values = cd$Result,
+                      title = gsub("\n", "<br>", paste(str_wrap(input$Parameters, 20), units)), 
+                      opacity = 0.6, layerId = "Legend")
+          
+          proxy
+
+        }) # end map observe event
+
+      ## Download Map Button ------------------------
+      output$map_export <- downloadHandler(
+        filename = function(){
+          paste("LNAPL_Volume_Map_", input$Parameters,".html")
+        },
+        content = function(con){
+
+          # Get Data
+          cd <- map_cd() %>% na.omit()
+
+          validate(need(dim(cd)[1] > 0, ''))
+          validate(need(input$radius > 0, ''))
+          validate(need(input$max > 0, ''))
+          validate(need(input$blur >= 1, ''))
+          
+          x <- input$Parameters
+          
+          # Defining Units
+          units <- case_when(
+            x == "LNAPL Specific Volume" ~  "(cm<sup>3</sup>/cm<sup>2</sup>)",
+            x == "Mobile LNAPL Specific Volume" ~ "(cm<sup>3</sup>/cm<sup>2</sup>)",
+            x == "Average LNAPL Relative Permeability" ~ "",
+            x == "Apparent Thickness of LNAPL" ~ "(m)",
+            x == "Average LNAPL Hydraulic Conductivity" ~ "(cm/d)",
+            x == "Average Transmissivity" ~ "(cm<sup>2</sup>/d)",
+            x == "LNAPL Unit Flux" ~ "(cm<sup>2</sup>/d)",
+            x == "Average LNAPL Seepage Velocity" ~ "(cm/d)")
+
+          pal <- colorNumeric(c("white","blue"), cd$Result,
+                              na.color = "transparent")
+
+          # Create map to export
+          map <- gen_map %>%
+            addCircleMarkers(data = cd, lng = ~Longitude, lat = ~Latitude,
+                             layerId = ~Location, group = "Wells",
+                             popup = ~pop,
+                             color = "black", fillColor = ~color, radius=4, stroke = TRUE,
+                             fillOpacity = 0.8, weight = .5, opacity = .8) %>%
+            addHeatmap(data =cd, lng = ~Longitude, lat = ~Latitude, intensity = ~Result, gradient = "blue",
+                       max = input$max, blur = input$blur, radius = input$radius, group = "heatmap") %>%
+            addLegend("bottomright", pal = pal, values = cd$Result,
+                      title = gsub("\n", "<br>", paste(str_wrap(input$Parameters, 20), units)), 
+                      opacity = 0.6, layerId = "Legend")%>%
+            addLayersControl(baseGroups = c('Base','Roads (Google)','Topo (ESRI)','Topo (Google)','Satellite (ESRI)','Satellite (Google)','Hybrid (Google)'),
+                             overlayGroups = c("Wells"),
+                             position = "bottomleft",
+                             options = layersControlOptions(collapsed = FALSE)) 
+          # Export Map
+          saveWidget(widget = map, file = con)
+        }
+      )# end map_export
+      
+      ## Loading Message for Heatmap -------------
+      output$Heatmap <- renderUI({
+        validate(need(!is.null(MW_Calcs()), 'Click Calculate'))
+        validate(need(MW_Calcs() != "Error with Inputs", 'Please Check Input Values'))
+      }) # end Heatmap
+
+      ## Map of Nearest Neighbors ------------------
+      output$nn_map <- renderLeaflet({
+        gen_map %>%
+          addDrawToolbar(targetGroup='Drawn Shape', polylineOptions=FALSE, markerOptions = FALSE, circleMarkerOptions = FALSE,
+                         circleOptions = FALSE, singleFeature = T, editOptions = editToolbarOptions(selectedPathOptions = selectedPathOptions())) %>%
+          addLayersControl(baseGroups = c('Base','Roads (Google)','Topo (ESRI)','Topo (Google)','Satellite (ESRI)','Satellite (Google)','Hybrid (Google)'),
+                           overlayGroups = c("Wells", "Drawn Shape"),
+                           position = "bottomleft",
+                           options = layersControlOptions(collapsed = FALSE)) %>%
+          addMeasure() %>%
+          hideGroup(group = "Drawn Shape")
+      }) # end nn_map
+
+
+      observeEvent({
+        input$Parameters2
+        input$calculate
+      },{
+        
+    
+        # Remove markers
+        proxy <- leafletProxy("nn_map") %>%
+          clearMarkers() %>%
+          removeControl(layerId = "Legend") %>%
+          clearGroup(group = "image")
+        
+        cd <- map_cd_nn() %>% na.omit()
+        req(dim(cd)[1] > 3)
+        
+        nnmsk <- near_neigh()
+        req(nnmsk)
+        
+        pal <- colorNumeric(c("#0C2C84", "#41B6C4", "#FFFFCC"), nnmsk$Result,
+                            na.color = "transparent")
+
+        nnmsk$colors <- pal(nnmsk$Result)
+        
+        x <- input$Parameters2
+        
         # Defining Units
         units <- case_when(
-          x == "LNAPL Specific Volume" ~  "m<sup>3/cm<sup>2</sup>",
-          x == "Mobile LNAPL Specific Volume" ~ "m<sup>3</sup>/cm<sup>2</sup>",
+          x == "LNAPL Specific Volume" ~  "(cm<sup>3</sup>/cm<sup>2</sup>)",
+          x == "Mobile LNAPL Specific Volume" ~ "(cm<sup>3</sup>/cm<sup>2</sup>)",
           x == "Average LNAPL Relative Permeability" ~ "",
-          x == "Maximum Elevation of Free LNAPL" ~ "m",
-          x == "Average LNAPL Hydraulic Conductivity" ~ "cm/d",
-          x == "Average Transmissivity" ~ "m<sup>2</sup>/d",
-          x == "LNAPL Unit Flux" ~ "m<sup>2</sup>/d",
-          x == "Average LNAPL Seepage Velocity" ~ "m/d")
-
-        # Defining Color
-        color <- case_when(
-          x == "LNAPL Specific Volume" ~  plot_col[1],
-          x == "Mobile LNAPL Specific Volume" ~ plot_col[1],
-          x == "Average LNAPL Relative Permeability" ~ plot_col[2],
-          x == "Maximum Elevation of Free LNAPL" ~ plot_col[3],
-          x == "Average LNAPL Hydraulic Conductivity" ~ plot_col[4],
-          x == "Average Transmissivity" ~ plot_col[5],
-          x == "LNAPL Unit Flux" ~ plot_col[6],
-          x == "Average LNAPL Seepage Velocity" ~ plot_col[7])
-
-        cd <- results %>% select(Location, Date, Latitude, Longitude, Result = !!var) %>%
-          mutate(pop = paste0("Location ID: ", Location, "<br>",
-                              "Date: ", Date, "<br>",
-                              x, ": ", signif(Result, 3), " ", units),
-                 color = color)
-        cd
-      })# end map_cd
-
-      # Update Map with Results
-      observeEvent({input$Parameters
-        input$calculate
-        },{
-
-        cd <- map_cd()
-
-        validate(need(dim(cd)[1] > 0, ''))
-
-        # Remove markers
-        proxy <- leafletProxy("map_holder") %>%
-          clearMarkers()
+          x == "Apparent Thickness of LNAPL" ~ "(m)",
+          x == "Average LNAPL Hydraulic Conductivity" ~ "(cm/d)",
+          x == "Average Transmissivity" ~ "(cm<sup>2</sup>/d)",
+          x == "LNAPL Unit Flux" ~ "(cm<sup>2</sup>/d)",
+          x == "Average LNAPL Seepage Velocity" ~ "(cm/d)")
 
         proxy <- proxy  %>%
           fitBounds(min(cd$Longitude), min(cd$Latitude), max(cd$Longitude), max(cd$Latitude)) %>%
@@ -505,44 +857,126 @@ LNAPLPresentServer <- function(id) {
                            layerId = ~Location, group = "Wells",
                            popup = ~pop,
                            color = "black", fillColor = ~color, radius=4, stroke = TRUE,
-                           fillOpacity = 0.8, weight = .5, opacity = .8) %>%
-          addHeatmap(data =cd, lng = ~Longitude, lat = ~Latitude, intensity = ~Result,
-                     max = 0.05)
+                           fillOpacity = 0.8, weight = .5, opacity = .8, options = pathOptions(pane = "markers")) %>%
+          addFeatures(nnmsk, weight = 1, color = "black", fillColor = ~colors, group = "image") %>%
+          addLegend("bottomright", pal = pal, values = nnmsk$Result,
+                    title = gsub("\n", "<br>", paste(str_wrap(input$Parameters2, 20), units)), 
+                    layerId = "Legend")
+
         proxy
-        }) # end map observe event
+        
+        v_used(nnmsk) # Save value for vol calcs
+      }) # end map observe event
       
-      ## Download Map Button ------------------------
-      output$map_export <- downloadHandler(
+      ## Draw Polygon ------
+      observe({
+        req(input$nn_map_draw_stop)
+        
+        proxy <- leafletProxy("nn_map") %>%
+          clearGroup(group = "image")
+        
+        v <- near_neigh_poly()
+        
+        pal <- colorNumeric(c("#0C2C84", "#41B6C4", "#FFFFCC"), v$Result,
+                            na.color = "transparent")
+        
+        v$colors <- pal(v$Result)
+        proxy <- proxy  %>%
+          addFeatures(v, weight = 1, color = "black", fillColor = ~colors, group = "image")
+        
+        proxy
+        v_used(v) # Save value for vol calcs
+      })
+
+      ## Calculate Total LNAPL Volumes -------------
+      output$Total_LNAPLVol <- renderUI({
+        validate(need(!is.null(MW_Calcs()), 'Click Calculate'))
+        validate(need(MW_Calcs() != "Error with Inputs", 'Please Check Input Values'))
+        cd <-  MW_Calcs()
+        cd <- full_join(loc(), cd, by = "Location") %>% na.omit()
+        validate(need(dim(cd)[1] > 3, 'Not enought Data to Interpolate'))
+        
+        v <- v_used()
+        req(v)
+
+        v@data$Area <- area(v)
+        total_area <- sum(v@data$Area)
+        Vol <- sum(v@data$Do_m3_m2_fin * (v@data$Area), na.rm = T)
+        Vol_Mobile <- sum(v@data$Do_mobile_m3_m2_fin* (v@data$Area), na.rm = T)
+
+        HTML(paste0("<h3>Total Area: ", formatC(round(total_area, 0), digits = 0, format = "f", big.mark = ","), " m<sup>2</sup><br><br>",
+                    "LNAPL Volume: ", formatC(round(Vol*1000, 0), digits = 0, format = "f", big.mark = ","), " L<br><br>
+                    Recoverable LNAPL Volume: ", formatC(round(Vol_Mobile * 1000, 0), digits = 0, format = "f", big.mark = ","), " L</h3>"))
+
+      }) # end Total_LNAPLVol
+
+      ## Export Interpolation Map ------------------
+      output$map_export2 <- downloadHandler(
         filename = function(){
-          paste("LNAPL_Volume_Map_", input$Parameters,".html")
+          paste("LNAPL_Volume_Inter-Map_", input$Parameters2,".html")
         },
         content = function(con){
-          
+
           # Get Data
-          cd <- map_cd()
+          validate(need(!is.null(MW_Calcs()), 'Click Calculate'))
+          validate(need(MW_Calcs() != "Error with Inputs", 'Please Check Input Values'))
+          nnmsk <- v_used() %>% na.omit()
+          cd <- map_cd_nn() %>% na.omit()
+
+          pal <- colorNumeric(c("#0C2C84", "#41B6C4", "#FFFFCC"), nnmsk$Result,
+                              na.color = "transparent")
           
-          validate(need(dim(cd)[1] > 0, ''))
+          x <- input$Parameters
           
-          # Create map to export
+          # Defining Units
+          units <- case_when(
+            x == "LNAPL Specific Volume" ~  "(cm<sup>3</sup>/cm<sup>2</sup>)",
+            x == "Mobile LNAPL Specific Volume" ~ "(cm<sup>3</sup>/cm<sup>2</sup>)",
+            x == "Average LNAPL Relative Permeability" ~ "",
+            x == "Apparent Thickness of LNAPL" ~ "(m)",
+            x == "Average LNAPL Hydraulic Conductivity" ~ "(cm/d)",
+            x == "Average Transmissivity" ~ "(cm<sup>2</sup>/d)",
+            x == "LNAPL Unit Flux" ~ "(cm<sup>2</sup>/d)",
+            x == "Average LNAPL Seepage Velocity" ~ "(cm/d)")
+
+          nnmsk$colors <- pal(nnmsk$Result)
+
+          # Remove markers
+          proxy <- leafletProxy("nn_map") %>%
+            clearMarkers() %>%
+            removeControl(layerId = "Legend") %>%
+            clearGroup(group = "image")
+
           map <- gen_map %>%
-            # fitBounds(min(cd$Longitude), min(cd$Latitude), max(cd$Longitude), max(cd$Latitude)) %>%
+            fitBounds(min(cd$Longitude), min(cd$Latitude), max(cd$Longitude), max(cd$Latitude)) %>%
             addCircleMarkers(data = cd, lng = ~Longitude, lat = ~Latitude,
                              layerId = ~Location, group = "Wells",
                              popup = ~pop,
                              color = "black", fillColor = ~color, radius=4, stroke = TRUE,
-                             fillOpacity = 0.8, weight = .5, opacity = .8) %>%
-            addHeatmap(data =cd, lng = ~Longitude, lat = ~Latitude, intensity = ~Result,
-                       max = 0.05)
+                             fillOpacity = 0.8, weight = .5, opacity = .8, options = pathOptions(pane = "markers")) %>%
+            addFeatures(nnmsk, weight = 1, color = "black", fillColor = ~colors, group = "image") %>%
+            addLegend("bottomright", pal = pal, values = nnmsk$Result,
+                      title = gsub("\n", "<br>", paste(str_wrap(input$Parameters2, 20), units)), 
+                      layerId = "Legend")%>%
+            addLayersControl(baseGroups = c('Base','Roads (Google)','Topo (ESRI)','Topo (Google)','Satellite (ESRI)','Satellite (Google)','Hybrid (Google)'),
+                             overlayGroups = c("Wells"),
+                             position = "bottomleft",
+                             options = layersControlOptions(collapsed = FALSE))
+          
+
           # Export Map
           saveWidget(widget = map, file = con)
         }
       )# end map_export
-      
+
       ## Data Table of Results --------------------
-      # observeEvent({input$calculate},{
+      observeEvent({input$calculate},{
       output$Model_DT <- renderDT({
         
-        cd <- get_mwCalc()
+        validate(need(!is.null(MW_Calcs()), 'Click Calculate'))
+        validate(need(MW_Calcs() != "Error with Inputs", 'Please Check Input Values'))
+
+        cd <- MW_Calcs()
 
         cd <- full_join(loc() %>% select("Location", "Date"), cd, by = "Location")
 
@@ -550,10 +984,10 @@ LNAPLPresentServer <- function(id) {
         x <- input$Parameters
 
         var <- case_when(
-          x == "LNAPL Specific Volume" ~  "Do_m3_cm2",
-          x == "Mobile LNAPL Specific Volume" ~ "Do_mobile_m3_cm2",
+          x == "LNAPL Specific Volume" ~  "Do_m3_m2",
+          x == "Mobile LNAPL Specific Volume" ~ "Do_mobile_m3_m2",
           x == "Average LNAPL Relative Permeability" ~ "kro_avg",
-          x == "Maximum Elevation of Free LNAPL" ~ "zmax_m",
+          x == "Apparent Thickness of LNAPL" ~ "zmax_m",
           x == "Average LNAPL Hydraulic Conductivity" ~ "KLNAPL_avg_cm_d",
           x == "Average Transmissivity" ~ "T_avg_m2_d",
           x == "LNAPL Unit Flux" ~ "ULNAPL_m2_d",
@@ -565,14 +999,14 @@ LNAPLPresentServer <- function(id) {
                       fillContainer = F,
                       escape = F,
                       colnames = c('Location<br>ID', 'Date',
-                                   'LNAPL Specific Volume<br>(m<sup>3</sup>/cm<sup>2</sup>)',
-                                   'Mobile LNAPL Specific Volume<br>(m<sup>3</sup>/cm<sup>2</sup>)',
+                                   'LNAPL Specific Volume<br>(cm<sup>3</sup>/cm<sup>2</sup>)',
+                                   'Mobile LNAPL Specific Volume<br>(cm<sup>3</sup>/cm<sup>2</sup>)',
                                    'Avg. LNAPL Relative Permeability',
-                                   'Max Elevation of Free LNAPL<br>(m)',
+                                   'Apparent Thickness of LNAPL<br>(m)',
                                    'Avg. LNAPL Hydraulic Conductivity<br>(cm/d)',
-                                   'Avg. Transmissivity (m<sup>2</sup>/d)',
-                                   'LNAPL Unit Flux<br>(m<sup>2</sup>/d)',
-                                   'Avg. LNAPL Seepage Velocity<br>(m/d)'),
+                                   'Avg. Transmissivity (cm<sup>2</sup>/d)',
+                                   'LNAPL Unit Flux<br>(cm<sup>2</sup>/d)',
+                                   'Avg. LNAPL Seepage Velocity<br>(cm/d)'),
                       options = list(paging = FALSE,
                                      searching = FALSE,
                                      scrollX = TRUE,
@@ -581,22 +1015,11 @@ LNAPLPresentServer <- function(id) {
           formatStyle(1:10, "white-space"="nowrap") %>%
           formatStyle(var, backgroundColor = "#DCDCDC") %>%
           formatSignif(3:10, digits = 3)
-        
-        
+
+
       })# end Model_DT
-      # })
-      
-      ## Tier 3 -----------------------------
-      ## Download pdf -----------------------
-      output$download_pdf <- downloadHandler(
-        filename = function(){
-          paste("LNAPL_Present","pdf",sep=".")
-        },
-        content = function(con){
-          file.copy("./www/02_LNAPL-Volume/Tier-3/A.  Tier 3 Materials_v3.pdf", con)
-        }
-      )# end download_data
-      
+      })
+
     }
   )
 }

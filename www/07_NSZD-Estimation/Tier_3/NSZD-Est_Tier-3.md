@@ -1,11 +1,13 @@
+<i><b>Information on this page can be downloaded using the button at the bottom of the page.</b></i><br>
+
 Natural Source Zone Depletion (NSZD) has emerged as an important new remediation alternative for LNAPL sites. Key references and a description of what they explain about NSZD are provided below:
 
 <ul>
 <li> The ITRC’s (2018) <a href="https://lnapl-3.itrcweb.org/appendix-b-natural-source-zone-depletion-nszd-appendix/" target="_blank">LNAPL Site Management—LCSM Evolution, Decision Process, and Remedial Technologies</a> guidance is heavily influenced by the developments in measuring and applying NSZD for LNAPL site management, with over 100 specific mentions of NSZD in the document and a detailed <a href="https://lnapl-3.itrcweb.org/appendix-b-natural-source-zone-depletion-nszd-appendix/#exec_sum" target="_blank">NSZD appendix</a>. More importantly, it provides detailed information on three frequently used NSZD assessment methods: </li>
 <ul>
 <li> The gradient method, based on soil gas composition,  </li>
-<li> Carbon dioxide flux-based methods, including CO2 traps and flux chambers, and  </li>
-<li> The biogenic heat monitoring method.  </li>
+<li> Carbon dioxide flux-based methods, including Carbon Traps and dynamic closed flux chambers (i.e. DCC-LI-COR), and  </li>
+<li> The biogenic heat monitoring method (Thermal Monitoring).  </li>
 </ul>
 
 <li>	Key vendors for these methods are: </li><ul>

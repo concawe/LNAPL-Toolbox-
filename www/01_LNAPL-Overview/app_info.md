@@ -1,7 +1,7 @@
 
 <h3><b> What is LNAPL? </b></h3> 
 
-<h4>LNAPL stands for “Light Non-Aqueous Phase Liquids” or hydrocarbons that exist as a separate undissolved phase in the subsurface at some sites with legacy releases of fuels. They are referred to as “Light” because most petroleum hydrocarbons are less dense than water. Because LNAPLs can sustain groundwater plumes for long time periods, it is important to understand how much LNAPL may be present at site, if the LNAPL can migrate, if it can be recovered, how the LNAPL composition changes over time, how long it may persist, and finally how quickly nature is destroying the LNAPL.</h4>
+<h4>LNAPL stands for “Light Non-Aqueous Phase Liquids” or hydrocarbons that exist as a separate undissolved phase in the subsurface at some sites with legacy releases of fuels. They are referred to as “Light” because most petroleum hydrocarbons are less dense than water. Because LNAPLs can sustain dissolved groundwater plumes for long time periods, it is important to understand how much LNAPL may be present at a site, if the LNAPL can migrate, if it can be recovered, how the LNAPL composition changes over time, how long it may persist, and finally how quickly the LNAPL body is attenuating.</h4>
 
 <p align="center">
 <img src="./01_LNAPL-Overview/Picture1.jpg">
@@ -10,7 +10,7 @@
 
 <h3><b>What is the Vision Behind the Concawe LNAPL Toolbox?</b></h3>
 
-<h4>Concawe envisioned collecting a unique collection of useful tools, calculators, data, and resources to help LNAPL scientists and engineers better understand how to manage LNAPL at their sites.</h4>
+<h4>Concawe envisioned compiling a unique collection of useful tools, calculators, data, and resources to help LNAPL scientists and engineers better understand how to manage LNAPL at their sites.</h4>
 
 <h3><b>How is the Toolbox Organized?</b></h3>
 
@@ -44,16 +44,18 @@ Recommended browsers:
 </ul>
 
 <br>
-Option 2: Download the Toolbox for use on your own computer or server. <br><br>
+Option 2: Download the Toolbox from <a href="https://github.com/concawe/LNAPL-Toolbox-" download>here</a> for use on your own computer or server.<br><br>
 Required software: 
 <ul>
   <li>R > 4.0.2 </li>
   <li>Python > 3.8 </li>
 </ul>
-
-
-
 </h4>
+
+<br>
+    <a class="btn btn-lg btn-primary" style = "white-space: normal; text-align:center; align-items: center; height:100px; width:170px; font-size: 18px; padding: 10px 10px; box-shadow: 10px 10px 5px #ccc;" onclick="window.open('GSI_Concawe_LNAPL_Manual.pdf')" role="button">User Manual for Concawe 
+LNAPL Toolbox </a>
+
 
 <hr class="featurette-divider">
 
@@ -404,11 +406,11 @@ Required software:
   </thead>
   <tbody class="gt_table_body">
     <tr>
-      <td class="gt_row gt_left" style="text-align: center; border-bottom-width: 2px; border-bottom-style: solid; border-bottom-color: white; border-right-width: 2px; border-right-style: solid; border-right-color: grey;">Markus Hjort</td>
-      <td class="gt_row gt_left" style="text-align: center; border-bottom-width: 2px; border-bottom-style: solid; border-bottom-color: white;">Brian Strasert</td>
+      <td class="gt_row gt_left" style="text-align: center; border-bottom-width: 2px; border-bottom-style: solid; border-bottom-color: white; border-right-width: 2px; border-right-style: solid; border-right-color: grey;">Markus Hjort, MSc</td>
+      <td class="gt_row gt_left" style="text-align: center; border-bottom-width: 2px; border-bottom-style: solid; border-bottom-color: white;">Brian Strasert, P.E.</td>
     </tr>
     <tr>
-      <td class="gt_row gt_left" style="text-align: center; border-bottom-width: 2px; border-bottom-style: solid; border-bottom-color: white; border-right-width: 2px; border-right-style: solid; border-right-color: grey;">Eleni Vaiopoulou</td>
+      <td class="gt_row gt_left" style="text-align: center; border-bottom-width: 2px; border-bottom-style: solid; border-bottom-color: white; border-right-width: 2px; border-right-style: solid; border-right-color: grey;">Eleni Vaiopoulou, PhD</td>
       <td class="gt_row gt_left" style="text-align: center; border-bottom-width: 2px; border-bottom-style: solid; border-bottom-color: white;">Charles Newell, Ph.D., P.E.</td>
     </tr>
     <tr>
@@ -417,26 +419,34 @@ Required software:
     </tr>
     <tr>
       <td class="gt_row gt_left" style="text-align: center; border-bottom-width: 2px; border-bottom-style: solid; border-bottom-color: white; border-right-width: 2px; border-right-style: solid; border-right-color: grey;">Tim Greaves</td>
-      <td class="gt_row gt_left" style="text-align: center; border-bottom-width: 2px; border-bottom-style: solid; border-bottom-color: white;">Poonam Kulkarni</td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_left" style="text-align: center; border-bottom-width: 2px; border-bottom-style: solid; border-bottom-color: white; border-right-width: 2px; border-right-style: solid; border-right-color: grey;">Sandrine Faucq</td>
-      <td class="gt_row gt_left" style="text-align: center; border-bottom-width: 2px; border-bottom-style: solid; border-bottom-color: white;">Kenia Whitehead, Ph.D.</td>
+      <td class="gt_row gt_left" style="text-align: center; border-bottom-width: 2px; border-bottom-style: solid; border-bottom-color: white;">Poonam Kulkarni, P.E.</td>
     </tr>
     <tr>
       <td class="gt_row gt_left" style="text-align: center; border-bottom-width: 2px; border-bottom-style: solid; border-bottom-color: white; border-right-width: 2px; border-right-style: solid; border-right-color: grey;">Wayne Jones</td>
-      <td class="gt_row gt_left" style="text-align: center; border-bottom-width: 2px; border-bottom-style: solid; border-bottom-color: white;">Brandon Sackmann, Ph.D.</td>
+      <td class="gt_row gt_left" style="text-align: center; border-bottom-width: 2px; border-bottom-style: solid; border-bottom-color: white;">Kenia Whitehead, Ph.D.</td>
     </tr>
     <tr>
       <td class="gt_row gt_left" style="text-align: center; border-bottom-width: 2px; border-bottom-style: solid; border-bottom-color: white; border-right-width: 2px; border-right-style: solid; border-right-color: grey;">Thomas Grosjean</td>
-      <td class="gt_row gt_left" style="text-align: center; border-bottom-width: 2px; border-bottom-style: solid; border-bottom-color: white;">Hannah Podzorski</td>
+      <td class="gt_row gt_left" style="text-align: center; border-bottom-width: 2px; border-bottom-style: solid; border-bottom-color: white;">Brandon Sackmann, Ph.D.</td>
     </tr>
     <tr>
       <td class="gt_row gt_left" style="text-align: center; border-bottom-width: 2px; border-bottom-style: solid; border-bottom-color: white; border-right-width: 2px; border-right-style: solid; border-right-color: grey;">Andrew Kirkman</td>
+      <td class="gt_row gt_left" style="text-align: center; border-bottom-width: 2px; border-bottom-style: solid; border-bottom-color: white;">Hannah Podzorski</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left" style="text-align: center; border-bottom-width: 2px; border-bottom-style: solid; border-bottom-color: white; border-right-width: 2px; border-right-style: solid; border-right-color: grey;">Jonathan Smith, Prof.</td>
       <td class="gt_row gt_left" style="text-align: center; border-bottom-width: 2px; border-bottom-style: solid; border-bottom-color: white;"></td>
     </tr>
     <tr>
-      <td class="gt_row gt_left" style="text-align: center; border-bottom-width: 2px; border-bottom-style: solid; border-bottom-color: white; border-right-width: 2px; border-right-style: solid; border-right-color: grey;">Jonathan Smith</td>
+      <td class="gt_row gt_left" style="text-align: center; border-bottom-width: 2px; border-bottom-style: solid; border-bottom-color: white; border-right-width: 2px; border-right-style: solid; border-right-color: grey;">Richard Gill, PhD.</td>
+      <td class="gt_row gt_left" style="text-align: center; border-bottom-width: 2px; border-bottom-style: solid; border-bottom-color: white;"></td>
+    </tr>
+        <tr>
+      <td class="gt_row gt_left" style="text-align: center; border-bottom-width: 2px; border-bottom-style: solid; border-bottom-color: white; border-right-width: 2px; border-right-style: solid; border-right-color: grey;">Jose Miguél Martinez Carmona</td>
+      <td class="gt_row gt_left" style="text-align: center; border-bottom-width: 2px; border-bottom-style: solid; border-bottom-color: white;"></td>
+    </tr>
+            <tr>
+      <td class="gt_row gt_left" style="text-align: center; border-bottom-width: 2px; border-bottom-style: solid; border-bottom-color: white; border-right-width: 2px; border-right-style: solid; border-right-color: grey;">Peter Discart</td>
       <td class="gt_row gt_left" style="text-align: center; border-bottom-width: 2px; border-bottom-style: solid; border-bottom-color: white;"></td>
     </tr>
   </tbody>
@@ -479,5 +489,7 @@ LNAPL Workgroup, LA. 2015. “LA Basin LNAPL Recoverability Study.” Los Angele
 NAVFAC. 2017. “New Developments in LNAPL Site Management.” Environmental Restoration.  https://frtr.gov/matrix/documents/Free-Product-Recovery/2017-Environmental-Restoration-New-Developments-in-LNAPL-Site-Management.pdf
 
 Sale, Thomas C., H Hopkins, and A Kirkman. 2018. “Managing Risk at LNAPL Sites Frequently Asked Questions.” <i>American Petroleum Institute Tech Bulletin</i>. 2nd Edition. Vol. API Soil a. Washington, DC: American Petroleum Institute. https://www.api.org/oil-and-natural-gas/environment/clean-water/ground-water/lnapl/lnapl-faqs.
+
+Smith, J. J., Benede, E., Beuthe, B., Marti, M., Lopez, A. S., Koons, B. W., Kirkman, A. J., Barreales, L. A., Grosjean, T., & Hjort, M. 2021. A Comparison of Three Methods to Assess Natural Source
 
 USEPA, 2016:  LNAPL Links to Additional Resources, U.S. Environmental Protection Agency. https://clu-in.org/conf/itrc/iuLNAPL/resource.cfm  

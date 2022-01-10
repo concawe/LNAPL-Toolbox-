@@ -242,4 +242,15 @@ div#ss-connect-dialog a:visited {
 
 /* Legend end */
 
-
+.button1 {
+  white-space: normal;
+  background-color:#eee;
+  color: black;
+  text-align:center;
+  align-items: center;
+  height:60px;
+  width:150px;
+  font-size: 14px;
+  padding: 10px 5px;
+  margin:5px;
+}

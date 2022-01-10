@@ -1,8 +1,10 @@
 <h3><b> What is Natural Source Zone Depletion (NSZD)? </b></h3> 
 
-<h4> NNSZD describes the loss of LNAPL due to various processes, the most important of which is biodegradation (<a href="http://www.itrcweb.org/GuidanceDocuments/LNAPL-1.pdf" target="_blank">ITRC, 2009</a>; <a href="https://lnapl-3.itrcweb.org/appendix-c-transmissivity-tn-appendix/" target="_blank">ITRC, 2018</a>).<br><br>
+<h4> NSZD describes the loss of LNAPL due to various processes, the most important of which is biodegradation (<a href="http://www.itrcweb.org/GuidanceDocuments/LNAPL-1.pdf" target="_blank">ITRC, 2009</a>; <a href="https://lnapl-3.itrcweb.org/appendix-c-transmissivity-tn-appendix/" target="_blank">ITRC, 2018</a>).<br><br>
 
 A series of research projects have determined that this depletion is occurring at much faster rates than first thought, up to 100’s to 1000’s of gallons per acre per year (<a href="http://onlinelibrary.wiley.com/doi/10.1111/j.1745-6592.2006.00114.x/abstract" target="_blank">Johnson et al., 2006</a>; <a href="http://pubs.acs.org/doi/abs/10.1021/es1032585" target="_blank">Sihota et al., 2011</a>; <a href="http://onlinelibrary.wiley.com/doi/10.1111/gwat.12240/abstract" target="_blank">McCoy et al., 2015</a>; <a href="http://onlinelibrary.wiley.com/doi/10.1111/gwmr.12219/full" target="_blank">Garg et al., 2017</a>).  Additionally, <a href="http://onlinelibrary.wiley.com/doi/10.1111/gwmr.12219/full" target="_blank">Garg et al. (2017)</a> describes an overview of the latest research and key processes controlling NSZD (see figure to right). As such, NSZD is becoming an important factor in the Conceptual Site Model (CSM) and may be incorporated into site management strategies. </h4>
+
+<h4>NSZD values reported in the literature range from <b>2,800 to 72,000 liters per hectare per year</b> with the middle 50% of NSZD values falling <b>between 6,600 to 26,000  liters per hectare per year</b> (<a href="http://onlinelibrary.wiley.com/doi/10.1111/gwmr.12219/full" target="_blank">Garg et al., 2017</a>).</h4>
 
 <h3><b>Additional Resources:</b></h3>  
 

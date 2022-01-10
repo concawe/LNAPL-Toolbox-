@@ -16,31 +16,11 @@ NSZDEstUI <- function(id, label = "NSZD Est"){
                       column(7, align = "center",
                              br(), br(),
                              img(src="07_NSZD-Estimation/Tier_1/NSZD-Est_Tier1-1_Figure.png"))),
-                      br(), br()#,
-                      # includeMarkdown("www/07_NSZD-Estimation/Tier_1/NSZD-Est_Tier-1-2.md") 
+                      br(), br()
              ), # Simple Explanation
              # Tier 2 ------------------------
              tabPanel(Tier2, 
                       tabsetPanel(
-                        ## Tier 2.1 -----------------------
-                        # tabPanel(HTML("<i>NSZD Rates Correlation</i>"),
-                        #          HTML("<h3><b><i> Under Construction </i></b></h3>"),
-                        #          # br(),
-                        #          fluidRow(
-                        #            column(4, style='border-right: 1px solid black',
-                        #                   includeMarkdown("www/07_NSZD-Estimation/Tier_2/NSZD-Estimation_Tier-2-1.md")
-                        #            ), # end column 1
-                        #            column(2,
-                        #                   HTML("<h3><b>Inputs:</b></h3>"),
-                        #                   selectizeInput(ns("fuel"), "Fuel Type", 
-                        #                                  choices = c("Gasoline"), multiple = F)
-                        #            ), # end column 2
-                        #            column(6, style='border-left: 1px solid black',
-                        #                   h4("NSZD Rate Range"),
-                        #                   uiOutput(ns("Rate_Range"))
-                        #            )# end column 3
-                        #            ) # end fluid row
-                        #          ), # end NSZD Rates Correlation
                         ## Tier 2.2 -----------------------
                         tabPanel(HTML("<i>NSZD Rate Converter</i>"),
                                  br(),
@@ -48,7 +28,8 @@ NSZDEstUI <- function(id, label = "NSZD Est"){
                                    column(4, style='border-right: 1px solid black',
                                           includeMarkdown("www/07_NSZD-Estimation/Tier_2/NSZD-Estimation_Tier-2-2.md"),
                                           gt_output(ns("Para_Table")),
-                                          includeMarkdown("www/07_NSZD-Estimation/Tier_2/NSZD-Estimation_Tier-2-2-2.md")
+                                          includeMarkdown("www/07_NSZD-Estimation/Tier_2/NSZD-Estimation_Tier-2-2-2.md"),
+                                          br(), br()
                                    ), # end column 1
                                    column(2, style='border-right: 1px solid black',
                                           HTML("<h3><b>Inputs:</b></h3>"),
@@ -70,7 +51,8 @@ NSZDEstUI <- function(id, label = "NSZD Est"){
                                  br(),
                                  fluidRow(
                                    column(4, style='border-right: 1px solid black',
-                                          includeMarkdown("www/07_NSZD-Estimation/Tier_2/NSZD-Estimation_Tier-2-3.md")
+                                          includeMarkdown("www/07_NSZD-Estimation/Tier_2/NSZD-Estimation_Tier-2-3.md"),
+                                          br(), br()
                                    ), # end column 1
                                    column(2,
                                           numericInput(ns("T1"), HTML("Initial Groundwater Temperature (&deg;C)"), value=15),
@@ -78,7 +60,7 @@ NSZDEstUI <- function(id, label = "NSZD Est"){
                                           numericInput(ns("NSZD_T1Rate"),HTML("NSZD Rate at T1 (L/ha/yr)"), value=7500),
                                           numericInput(ns("Q10"),HTML("Temperature Coefficent <i>(typically 2.0)</i>"), value=2)
                                    ), # end column 2
-                                   column(6, align = "center", style='border-left: 1px solid black',
+                                   column(6, style='border-left: 1px solid black',
                                           plotOutput(ns("NSZD_Rate_v_Temp")),
                                           uiOutput(ns("NSZD_T2Rate_ans"))
                                           )# end column 3
@@ -97,11 +79,10 @@ NSZDEstUI <- function(id, label = "NSZD Est"){
                                includeMarkdown("www/07_NSZD-Estimation/Tier_3/NSZD-Est_Tier-3.md"),
                                br(),
                                gt_output(ns("Table1")),
+                               br(), br(),
+                               gt_output(ns("Table2")),
                                br(),
                                includeMarkdown("www/07_NSZD-Estimation/Tier_3/NSZD-Est_Tier-3-2.md"),
-                               # Button to download pdf
-                               fluidRow(align = "center",
-                                        downloadButton(ns("download_pdf"), HTML("<br>Download Information"), style=button_style)),
                                br(), br()
                         ), # end column 1
                         column(2,
@@ -121,10 +102,7 @@ NSZDEstServer <- function(id) {
     id,
     
     function(input, output, session) {
-      
-      ## Tier 1 -------------------------------
-      output$Table1 <-  render_gt({NSZD_Est_Table1})
-      
+      # Tier 2 --------------------------------
       ### Tier 2-1 -----------------------------
       # NSZD Rate Range
       output$Rate_Range <- renderUI({
@@ -303,8 +281,6 @@ NSZDEstServer <- function(id) {
                          Rate = c(input$NSZD_T1Rate, NSZD_T2Rate_get()),
                          Label = c("T1", "T2"))
         
-        ans <- NSZD_T2Rate_get()
-        
        ggplot(data = cd) +
           geom_function(fun = ~(input$NSZD_T1Rate*input$Q10^((.x-input$T1)/10.0)), size = 2, color = "#002131") +
           geom_point(aes(x = Temp, y = Rate), size = 5, color = "grey") +
@@ -312,23 +288,22 @@ NSZDEstServer <- function(id) {
           scale_x_continuous(limits = c(input$T1, round(input$T2*.25 + input$T2, 1)),
                              labels = scales::label_comma(accuracy = 1, big.mark = ',', decimal.mark = '.')) +
           scale_y_continuous(labels = scales::label_comma(accuracy = 1, big.mark = ',', decimal.mark = '.')) +
-          labs(x = HTML("Avg. Subsurface Temperature (°C)"), y = "NSZD Rate\n(liters per hectare per year)",
-               title = paste0("NSZD Rate at Enhanced Temperature (T2) (L/ha/yr):\n", prettyNum(round(ans, 2), big.mark = ","), "\n")) + 
+          labs(x = HTML("Avg. Subsurface Temperature (°C)"), y = "NSZD Rate\n(liters per hectare per year)") + 
           theme
         
       }) # NSZD_Rate_v_Temp
       
-      ## Tier 3 -----------------------------
-      ## Download pdf -----------------------
-      output$download_pdf <- downloadHandler(
-        filename = function(){
-          paste("NSZD-Estimation","pdf",sep=".")
-        },
-        content = function(con){
-          file.copy("./www/07_NSZD-Estimation/Tier_3/F.  Tier 3 Materials v4.pdf", con)
-        }
-      )# end download_data
+      output$NSZD_T2Rate_ans <- renderUI({
+        ans <- NSZD_T2Rate_get()
+        
+        HTML(paste0("<h3><b>Answer:<br>NSZD Rate at Enhanced Temperature (T2):<br><span style='color: #ff0000'>", 
+                    prettyNum(round(ans, 2), big.mark = ","), "</span> (L/ha/yr)</b></h3>"))
+      })
       
+      ## Tier 3 -----------------------------
+      output$Table1 <-  render_gt({NSZD_Est_Table1})
+      
+      output$Table2 <-  render_gt({NSZD_Est_Table2})
     }
   )
 }

@@ -1,0 +1,9 @@
+Fuel Type,Fuel Carbon Range,Number of Distinct Sites ,Total No. of Measurements,Range of NSZD Rates Measured (L/ha/yr),"Median NSZD Rate 
+(L/ha/yr)"
+Natural Gas Liquid*,C3-C6,5,1661," 1,590 - 54,800 ","4,700"
+Mixed ,--,6,855," 1,760 - 57,060 ","4,400"
+Crude Oil,C8-C44,2,77," 2,250 - 24,000 ","7,700"
+Gasoline ,C5-C12,4,144," 2,800 - 41,500 ","9,800"
+Diesel and Jet Fuel,C9-C24,12,134," 650 - 99,400 ","12,250"
+Fuel-Grade Ethanol,C2H6O,2,183," 123,200 - 152,500 ","138,000"
+Total,,31,3054, Median: ,"8,750"

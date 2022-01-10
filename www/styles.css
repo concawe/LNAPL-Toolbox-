@@ -115,3 +115,29 @@ h1, h2, h3, h4 { font-weight: 400; }
 .dataTables_wrapper { 
   overflow: auto;
 }
+
+.button1 {
+  white-space: normal;
+  background-color:#eee;
+  color: black;
+  text-align:center;
+  align-items: center;
+  height:60px;
+  width:150px;
+  font-size: 14px;
+  padding: 10px 5px;
+  margin:5px;
+}
+
+.button2 {
+  white-space: normal;
+  background-color:#eee;
+  color: black;
+  text-align:center;
+  align-items: center;
+  height:40px;
+  width:150px;
+  font-size: 14px;
+  padding: 8px 5px 8px 5px;
+  margin:5px;
+}

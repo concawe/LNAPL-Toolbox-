@@ -27,9 +27,17 @@ require(gridExtra)
 require(gt)
 require(openxlsx)
 require(ggforce)
+library(gstat)
+library(sp)
+library(rgdal)
+library(raster)
+library(shinycssloaders)
+library(dismo)
+library(leafem)
+library(deldir)
+library(rgeos)
 
 require(plotly)
-library(renv)
 library(rsconnect)
 
 library(reticulate)
@@ -38,15 +46,6 @@ library(reticulate)
 # Colors
 # The palette with grey:
 plot_col <- c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
-  
-# Margins for plotly plots
-m <- list(
-  l = 50,
-  r = 50,
-  b = 100,
-  t = 100,
-  pad = 20
-)
 
 # GGPLOT Theme Object
 theme <- theme(
@@ -65,8 +64,8 @@ theme <- theme(
   text = element_text(family = "sans"),
   axis.text.x = element_text(color="black", size=14, vjust=0.5,hjust = 0.5, angle=0),
   axis.text.y = element_text(color="black", size=14, vjust=0.5), 
-  axis.title.x=element_text(color="black", size=20, face="bold"),
-  axis.title.y=element_text(color="black", size=20, vjust=2, face="bold"),
+  axis.title.x=element_text(color="black", size=22, face="bold"),
+  axis.title.y=element_text(color="black", size=22, vjust=2, face="bold"),
   plot.title = element_text(size = 25, hjust = 0.5, face="bold"),
   strip.text = element_text(size = 10, hjust = 0, face="bold"),
   #Legend
@@ -78,20 +77,6 @@ theme <- theme(
 ) 
 
 # Functions -----------------
-
-# function for bubble plot
-  bubble_plot_fxn <- function(data, parameter) {
-    
-    rs <- rescale(d[, parameter], to = c(5, 20))
-    
-    plot_ly(data, x = ~Lon, y = ~Lat, text = ~LocationID, type = 'scatter', mode = 'markers',
-            marker = list(color="orange", size = ~rs, opacity = 0.7)) %>%
-      layout(xaxis=list(title="Longitude (degrees W)"), yaxis = list(type = "log", title="Latitude (degrees N)"), 
-             showlegend=FALSE, margin=m)
-   
-  }
-
-
 #Convert lat/long
 convert_coords <- function(x,y) {
   
@@ -119,28 +104,11 @@ fmt_dcimals <- function(decimals=5, format = "G"){
 }
 
 # Source Python Code ------------------
-# Define any Python packages needed for the app
-
-# PYTHON_DEPENDENCIES = c("argparse", 'numpy')
-
-# virtualenv_dir = Sys.getenv('VIRTUALENV_NAME')
-# python_path = Sys.getenv('PYTHON_PATH')
-
-# Create virtual env and install dependencies
-
-# if(Sys.info()[['user']] == 'shiny'){
-
-#   # Create virtual env and install dependencies
-#   reticulate::virtualenv_create(envname = virtualenv_dir, python = python_path)
-#   reticulate::virtualenv_install(virtualenv_dir, packages = PYTHON_DEPENDENCIES, ignore_installed=TRUE)
-#   reticulate::use_virtualenv(virtualenv_dir, required = T)
-# }
-
 source_python("./R/Python_Code/LNAPL_SubsurfVolExt.py")
 source_python("./R/Python_Code/LNAPL_NSZDTempEnhanceCalc.py")
 source_python("./R/Python_Code/LNAPL_NSZDSourceLifetime.py")
 source_python("./R/Python_Code/LNAPL_NSZDRateConverter.py")
-source_python("./R/Python_Code/LNAPL_ConcHistCalculator.py")
+source_python("./R/Python_Code/LNAPL_ConcHistCalculator_v1-1.py")
 source_python("./R/Python_Code/LNAPL_DarcyCalculator.py")
 source_python("./R/Python_Code/LNAPL_MigrationModel.py")
 
@@ -153,7 +121,8 @@ button_style <- "white-space: normal;
                         height:60px;
                         width:150px;
                         font-size: 14px;
-                        padding: 10px 0;"
+                        padding: 10px 0;
+                        margin:5px;"
 
 button_style_big <- "white-space: normal;
                         text-align:center;
@@ -166,33 +135,32 @@ Tier1 <- HTML("<p style='text-align:center; margin-bottom:0;'>Tier 1<br>Quick In
 Tier2 <- HTML("<p style='text-align:center; margin-bottom:0;'>Tier 2<br>Models/Tools</p>")
 Tier3 <- HTML("<p style='text-align:center; margin-bottom:0;'>Tier 3<br>Gateway to Complex Tools</p>")
 
-# Toolbox Overview ----------
-# names <- read.csv("./data/Team.csv")
-# 
-# names_table <- names %>%  gt() %>% 
-#   cols_label(Concawe.Soil.Groundwater.Taskforce..STF.33. = HTML("Concawe Soil Groundwater<br>Taskforce (STF-33)"),
-#              GSI.Environmental.Team = HTML("GSI Environmental Team<br><br>")) %>%
-#   tab_options(row.striping.include_table_body = FALSE) %>%
-#   tab_style(style = list(cell_text(weight = "bold", align = "center")),
-#             locations = list(cells_column_labels(columns = everything()))) %>%
-#   tab_style(style = list(cell_text(align = "center"),
-#                          cell_borders(sides = c("b"), color = "white", weight = px(2))),
-#             locations = list(cells_body(columns = everything(), rows = everything()))) %>%
-#   tab_style(style = list(cell_borders(sides = c("r"), color = "grey", weight = px(2))),
-#             locations = list(cells_body(columns = 1, rows = everything()),
-#                              cells_column_labels(columns = 1))) %>%
-#   opt_table_outline()
-
 # LNAPL Volume -----------------
 ## Tier 2 ----------------------
-default_loc <- read.csv("./data/LNAPL_Volume_Data_Loc.csv") 
-colnames(default_loc) <- c(c("Location", "Date",  "Latitude", "Longitude", "LNAPL_Top_Depth_m", "LNAPL_Bottom_Depth_m", "LNAPL_Gradient"))
-  
-default_strat <- read.csv("./data/LNAPL_Volume_Data_Strat.csv")
-colnames(default_strat) <- c("Location", "Layer_Top_Depth_m", "Layer_Bottom_Depth_m", "Soil_Type")
 
-default_soil <- read.csv("./data/LNAPL_Volume_Data_Soil.csv")
-colnames(default_soil) <- c("Soil_Num", "Soil_Type", "Porosity", "Ks_m-d", "Theta_wr", "N", "alpha_m", "M")
+default_loc <- read_xlsx("./data/LNAPL_Volume_Data_Template.xlsx", sheet = "Location_Information", range = cell_cols("A:G"), 
+                 col_types = c("text", "text", "numeric", "numeric", "numeric", "numeric", "numeric")) %>%
+  select(Location = `Monitoring Well`, 
+         Date, Latitude, Longitude, 
+         LNAPL_Top_Depth_m = `LNAPL Top Depth Below Ground Surface (m)`, 
+         LNAPL_Bottom_Depth_m = `LNAPL Bottom Depth Below Ground Surface (m)`,
+         LNAPL_Gradient = `LNAPL Gradient (m/m)`) %>% 
+  filter(Location != "Add additional rows as needed.") %>%
+  mutate(Date = as.character(Date))
+
+default_strat <- read_xlsx("./data/LNAPL_Volume_Data_Template.xlsx", sheet = "Stratigraphy", range = cell_cols("A:D"),
+                   col_types = c("text", "numeric", "numeric", "text")) %>%
+  select(Location = `Monitoring Well`, 
+         Layer_Top_Depth_m = `Layer Top Depth Below Ground Surface (m)`, 
+         Layer_Bottom_Depth_m = `Layer Bottom Depth Below Ground Surface (m)`, 
+         Soil_Type = `Soil Type`) %>% 
+  filter(Location != "Add additional rows as needed.")
+
+default_soil <- read_xlsx("./data/LNAPL_Volume_Data_Template.xlsx", sheet = "Soil_Types", range = cell_cols("A:H"),
+                  col_types = c("text", "text", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric")) %>%
+  na.omit() %>%
+  select(Soil_Num = 1, Soil_Type = 2, Porosity = 3, `Ks_m-d` = 4, Theta_wr = 5, N = 6, alpha_m = 7, M = 8) %>% 
+  mutate(Soil_Num = as.numeric(Soil_Num))
 
 gen_map <- leaflet() %>%
   addTiles(urlTemplate = 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png',
@@ -210,15 +178,13 @@ gen_map <- leaflet() %>%
            options = providerTileOptions(maxNativeZoom=19,maxZoom=100)) %>%
   addTiles(urlTemplate = "https://mts1.google.com/vt/lyrs=y&hl=en&src=app&x={x}&y={y}&z={z}&s=G", group="Hybrid (Google)",
            options = providerTileOptions(maxNativeZoom=19,maxZoom=100)) %>%
-  addLayersControl(baseGroups = c('Base','Roads (Google)','Topo (ESRI)','Topo (Google)','Satellite (ESRI)','Satellite (Google)','Hybrid (Google)'),
-                   position = "topright",
-                   options = layersControlOptions(collapsed = FALSE)) %>%
-  addScaleBar(position = "bottomleft") %>%
-  addMiniMap(position = "bottomleft",
-             tiles = 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png')
+  addMapPane("polygons", zIndex = 410) %>%
+  addMapPane("markers", zIndex = 420) %>%
+  addScaleBar(position = "bottomleft", options = scaleBarOptions(metric = T, imperial = F))
 
 # LNAPL-Migrate ---------------------------
 ## Tier-2 ---------------------------------
+LNAPL_MigrationModel <- read.csv("./data/LNAPL_MigrationModel.csv")
 LNAPLMigrate_Mahler <- read.csv("./data/LNAPL-Migrate_Mahler-Migration.csv")
 
 # LNAPL-Persist ---------------------------
@@ -289,35 +255,6 @@ LNAPLRisk_Table2 <- read.csv("./data/LNAPL-Risk_Tier-1-2.csv", encoding = "UTF-8
 colnames(LNAPLRisk_Table2)[1] <- "Compound Name"
   
 # NSZD Est ----------------------------
-## Tier 1 -----------------------------
-# HTML Table
-NSZD_Est_Table1 <- read.csv("./data/LNAPL-NSZD_Est_Tier-1.csv", colClasses = "character")
-
-NSZD_Est_Table1  <- NSZD_Est_Table1 %>% gt() %>%
-  tab_spanner(label = "Site Wide NSZD Rate (Gallons/Acre/Year)",
-    columns = vars(Site.Wide.NSZD.Rate..Gallons.Acre.year.__.All.Sites.,
-                   Site.Wide.NSZD.Rate...Gallons.Acre.year.__.Middle.50..)) %>%
-  tab_header("Examples of Site-Wide Average NSZD Rate Measurements at Field Sites") %>%
-  cols_label(NSZD.Study = "NSZD Study", Number.of.Sites = "Number of Sites", 
-             Site.Wide.NSZD.Rate..Gallons.Acre.year.__.All.Sites. = "All Sites", 
-             Site.Wide.NSZD.Rate...Gallons.Acre.year.__.Middle.50.. = "Middle 50%", 
-             Reference = "Reference") %>%
-  tab_options(row.striping.include_table_body = FALSE) %>%
-  tab_style(style = list(cell_text(weight = "bold")),
-            locations = cells_title(group = "title")) %>%
-  tab_style(style = list(cell_text(align = "center")),
-            locations = cells_column_labels(columns = everything())) %>%
-  tab_style(style = list(cell_borders(sides = "all", color = NULL),
-                         cell_text(align = "center")),
-            locations = cells_body(columns = everything())) %>%
-  tab_style(style = list(cell_text(align = "left")),
-            locations = cells_body(columns = c(1, 5), row = everything())) %>%
-  tab_style(style = list(cell_text(weight = "bold")),
-            locations = cells_body(columns = 2:4, row = 8)) %>%
-  tab_source_note(source_note = "Notes: Middle 50% column shows the 25th and 75th percentile values. To demonstrate the 
-                  significance of methanogenesis, NSZD rates calculated from the biodegradation capacity of electron acceptors 
-                  in the saturated zone, ignoring methanogenesis, are shown in the last row.")
-
 ##Tier 2 ------------------------------
 # Key Assumption Table
 para <- read.csv("./data/NSZD-Est_Parameter-Table_Tier-2.csv")
@@ -374,6 +311,66 @@ data_for_select_out <- tibble(value = c("gal/ac/yr", "L/ha/yr", "umol CO2/m2/sec
                                       HTML("g/m<sup>2</sup>/yr"),
                                       "lb/ac/yr", "kg/ha/yr"))
 
+## Tier 3 ---------------------------------------------
+# HTML Table1
+NSZD_Est_Table1 <- read.csv("./data/LNAPL-NSZD_Est_Tier-1.csv", colClasses = "character")
+
+NSZD_Est_Table1  <- NSZD_Est_Table1 %>% gt() %>%
+  tab_spanner(label = "Site Wide NSZD Rate (Gallons/Acre/Year)",
+              columns = vars(Site.Wide.NSZD.Rate..Gallons.Acre.year.__.All.Sites.,
+                             Site.Wide.NSZD.Rate...Gallons.Acre.year.__.Middle.50..)) %>%
+  tab_header("Examples of Site-Wide Average NSZD Rate Measurements at Field Sites") %>%
+  cols_label(NSZD.Study = "NSZD Study", Number.of.Sites = "Number of Sites", 
+             Site.Wide.NSZD.Rate..Gallons.Acre.year.__.All.Sites. = "All Sites", 
+             Site.Wide.NSZD.Rate...Gallons.Acre.year.__.Middle.50.. = "Middle 50%", 
+             Reference = "Reference") %>%
+  tab_options(row.striping.include_table_body = FALSE) %>%
+  tab_style(style = list(cell_text(weight = "bold")),
+            locations = cells_title(group = "title")) %>%
+  tab_style(style = list(cell_text(align = "center")),
+            locations = cells_column_labels(columns = everything())) %>%
+  tab_style(style = list(cell_borders(sides = "all", color = NULL),
+                         cell_text(align = "center")),
+            locations = cells_body(columns = everything())) %>%
+  tab_style(style = list(cell_text(align = "left")),
+            locations = cells_body(columns = c(1, 5), row = everything())) %>%
+  tab_style(style = list(cell_text(weight = "bold")),
+            locations = cells_body(columns = 2:4, row = 8)) %>%
+  tab_source_note(source_note = "Notes: Middle 50% column shows the 25th and 75th percentile values. To demonstrate the 
+                  significance of methanogenesis, NSZD rates calculated from the biodegradation capacity of electron acceptors 
+                  in the saturated zone, ignoring methanogenesis, are shown in the last row.")
+
+# HTML Table2
+NSZD_Est_Table2 <- read.csv("./data/NSZD-Table_Tier-3.csv", colClasses = "character")
+
+NSZD_Est_Table2  <- NSZD_Est_Table2 %>% gt() %>%
+  tab_header("SUMMARY OF NSZD RATES FROM 31 SITES") %>%
+  cols_label(Fuel.Type = "Fuel Type",
+             Fuel.Carbon.Range = "Fuel Carbon Range",                         
+             Number.of.Distinct.Sites = "Number of Distinct Sites",
+             Total.No..of.Measurements = "Total No. of Measurements",                 
+             Range.of.NSZD.Rates.Measured..L.ha.yr. = "Range of NSZD Rates Measured (L/ha/yr)",    
+             Median.NSZD.Rate...L.ha.yr. = "Median NSZD Rate (L/ha/yr)") %>%
+  tab_options(row.striping.include_table_body = FALSE) %>%
+  tab_style(style = list(cell_text(weight = "bold")),
+            locations = cells_title(group = "title")) %>%
+  tab_style(style = list(cell_text(align = "center", weight = "bold")),
+            locations = cells_column_labels(columns = everything())) %>%
+  tab_style(style = list(cell_borders(sides = "all", color = NULL),
+                         cell_text(align = "center")),
+            locations = cells_body(columns = everything())) %>%
+  tab_style(style = list(cell_text(align = "right")),
+            locations = cells_body(columns = c(1), row = everything())) %>%
+  tab_style(style = list(cell_text(align = "right")),
+            locations = cells_body(columns = c(1, 5), row = 7)) %>%
+  tab_style(style = list(cell_text(weight = "bold")),
+            locations = cells_body(columns = everything(), row = 7)) %>%
+  tab_source_note(source_note = "*May also contain smaller amounts of C7-C12 hydrocarbons")%>%
+  tab_style(style = list(cell_borders(sides = "all", color = "black")),
+            locations = list(cells_body(columns = everything()),
+                             cells_column_labels(columns = everything()))) %>%
+  tab_style(style = list(cell_fill(color = "#DDEBF7")),
+            locations = list(cells_column_labels(columns = everything())))
 
 
 ## Loading Modules ------------------------------------
@@ -392,10 +389,4 @@ source("./R/LNAPLRecovery.R")
 
 # Shinyio ------------------------------------------
 # rsconnect::deployApp()
-
-# renv --------------------------------------------
-# renv::init()
-# renv::snapshot()
-#If you update packages and things break
-# renv::restore()
 

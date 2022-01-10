@@ -1,3 +1,5 @@
+<i><b>Information on this page can be downloaded using the button at the bottom of the page.</b></i><br>
+
 A simple box model is provided in Tier 2 and provides a range of time required for the LNAPL to be removed by Natural Source Zone Depletion (NSZD). Users enter the estimated mass/volume of LNAPL present and the estimated NSZD rate. <br>
 
 Two more sophisticated computer tools that can be used to estimate how long the LNAPL might persist at a site are <a href="https://cfpub.epa.gov/si/si_public_record_report.cfm?Lab=NRMRL&dirEntryId=241847" target="_blank">REMFuel</a> (<a href="https://cfpub.epa.gov/si/si_public_file_download.cfm?p_download_id=536926&Lab=NRMRL" target="_blank">Falta et al., 2012</a>) and <a href="https://www.api.org/oil-and-natural-gas/environment/clean-water/ground-water/lnapl/evaluating-hydrocarbon-removal" target="_blank">LNAST</a> (<a href="https://www.api.org/oil-and-natural-gas/environment/clean-water/ground-water/lnapl/evaluating-hydrocarbon-removal" target="_blank">Huntley and Beckett, 2002</a>). A short summary of each model is provided below:
@@ -13,7 +15,7 @@ Two more sophisticated computer tools that can be used to estimate how long the 
 <li> The user can model plume remediation at any time in three separate spatial zones by increasing first order decay constants. </li>
 <li> NSZD can also be simulated by entering a value for “Source Decay” although there is no discussion in User’s Guide on how to do this. </li>
 <li> Key output of the model are graphs showing the concentration (or mass discharge) of the constituents in the dissolved plume vs. distance from source. </li>
-<li> Download model from USEPA web page <a href="https://cfpub.epa.gov/si/si_public_record_report.cfm?Lab=NRMRL&dirEntryId=241847" target="_blank">here</a>. </li>
+<li> Download model from USEPA web page <a href="https://www.epa.gov/water-research/remediation-evaluation-model-fuel-hydrocarbons-remfuel" target="_blank">here</a>. </li>
 </ul>
 
 <h3><b> Overview of API’s <u>LN</u>APL Dissolution <u>a</u>nd Transport <u>S</u>creening <u>T</u>ool (LNAST; version 2.0.4) </b></h3>
@@ -41,14 +43,14 @@ Two more sophisticated computer tools that can be used to estimate how long the 
 Two short videos are available to learn more about REMFuel and LNAST:
 <ul>
 <li> <a href="https://www.youtube.com/watch?v=H8JP8gvZcr8" target="_blank">REMFuel</a> </li>
-<li> LNAST </li>
+<li> <a href="https://www.youtube.com/watch?v=C2F66MNywKk" target="_blank">LNAST</a> </li>
 </ul>
 <br><br>
 <p align="center">
 <iframe width="560" height="315" src="https://www.youtube.com/embed/H8JP8gvZcr8" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe><br><br>
 <button class="btn btn-lg btn-primarys" onclick=" window.open('https://www.epa.gov/water-research/remediation-evaluation-model-fuel-hydrocarbons-remfuel','_blank')">Link to Remediation Evaluation Model for Fuel Hydrocarbons</button>
 <br><br>
-<iframe width="560" height="315" src="https://www.youtube.com/embed/H8JP8gvZcr8" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe><br><br>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/C2F66MNywKk" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe><br><br>
 <button class="btn btn-lg btn-primarys" onclick=" window.open('https://www.api.org/oil-and-natural-gas/environment/clean-water/ground-water/lnapl/evaluating-hydrocarbon-removal','_blank')">Link to LNAPL Dissolution and Transport Screening Tool</button>
 </p><br><br>
 
@@ -74,6 +76,9 @@ In this example, source remediation and plume remediation were performed, leadin
 <p align="center">
 <img src="./04_LNAPL-Persist/Tier_3/images/Picture2.png">
 </p><br><br>
+
+<h3><b> Checklist of Input Data for LNAST </b></h3>
+Images reproduced courtesy of the American Petroleum Institute from LNAPL Dissolution and Transport Screening Tool, version 2.0.4, February 2006
 
 To use LNAST, the user first indicates the information desired from the tool:
 <br><br>
@@ -104,6 +109,8 @@ The tool then takes the user through a series of eight input screens to define s
 
 <h3><b> Example of LNAST Output Data </b></h3>
 
+Images reproduced courtesy of the American Petroleum Institute from LNAPL Dissolution and Transport Screening  Tool, version 2.0.4, February 2006
+
 After performing the selected calculations, LNAST allows users to display results to the screen, create a report, or export the results.
 
 <p align="center">
@@ -128,4 +135,6 @@ An example of key output for LNAPL recovery in a trench is shown below:
 
 <a href="https://www.api.org/oil-and-natural-gas/environment/clean-water/ground-water/lnapl/evaluating-hydrocarbon-removal" target="_blank">Huntley, D., Beckett, G., 2002. Evaluating Hydrocarbon Removal from Source Zones and Its Effect on Dissolved Plume Longevity and Magnitude. American Petroleum Institute.</a> 
 
-
+<div style = "text-align:center;">
+<a class="btn btn-default btn btn-default shiny-download-link shiny-bound-output button2" onclick="window.open('04_LNAPL-Persist/Tier_3/C.  Tier 3 Materials.pdf')" role="button">Download Information</a>
+</div>

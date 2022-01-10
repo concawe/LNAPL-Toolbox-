@@ -1,3 +1,5 @@
+<h3> NSZD Rate Converter </h3>   
+
 <h3> What the Model Does </h3>   
 
 NSZD rates are typically reported in units of volume of LNAPL biodegraded per area per time, such as “gallons per acre per year” in some of the NSZD projects performed in the United States.  This model converts typical measures of NSZD rates between metric and imperial, as well as converting from carbon dioxide flux to mass or volume of LNAPL degraded per area per time (ex. Liters of LNAPL biodegraded per hectare per year). 

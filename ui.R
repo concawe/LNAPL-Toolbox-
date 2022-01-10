@@ -20,7 +20,7 @@ shinyUI <- navbarPage(theme="styles.css",
                       collapsible = TRUE, fluid=TRUE, 
                       windowTitle = "LNAPL Toolbox",
                       title=div(a(" ",
-                                  img(src="https://www.concawe.eu/wp-content/uploads/2018/03/logo-new-concawe.png"), 
+                                  img(src="https://www.concawe.eu/wp-content/uploads/2018/03/logo-new-concawe.png"),
                                   href = 'https://www.concawe.eu/', target="_blank")),
                       id="nav",
                       # Tab panels 
@@ -54,6 +54,14 @@ shinyUI <- navbarPage(theme="styles.css",
 
                    LNAPLRecoveryUI("LNAPL_Recovery"),
 
-                   NSZDEstUI("NSZD_Est")
+                   NSZDEstUI("NSZD_Est"), 
+                   
+                   footer = HTML('<a href="https://www.gsi-net.com/en/" target="_blank">
+                   <div style="background-color: #005a87; padding: 10px; margin-right: 0;  margin-left: 0;">
+                                   <h3 class="featurette-heading" style="color:white;" >Powered by GSI Environmental, 2021</h3>
+                                   </div></a>')
+                   
 
 ) # End UI
+
+

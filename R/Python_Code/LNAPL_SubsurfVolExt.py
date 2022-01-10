@@ -63,6 +63,7 @@ def mwCalc(waterDensity,lnaplDensity,lnaplViscosity,airWaterTension,lnaplWaterTe
         # Datum is depth to bottom of LNAPL = 0 elevation. All other elevations are computed relative
         # to this datum, up to the maximum height of LNAPL in soil above the datum which is equal to zmax.
         zao  = bo
+        zao_m = zao/100 #converting back to meters
         zmax = bo + (1 - denrel) * (st_ao / st_ow) / (denrel - (1 - denrel) * (st_ao / st_ow)) * bo
 
         # Layer -- 2nd loop
@@ -143,6 +144,7 @@ def mwCalc(waterDensity,lnaplDensity,lnaplViscosity,airWaterTension,lnaplWaterTe
         layDat['Por']     = Por
         layDat['Ksat']    = Ksat
         layDat['zao']     = zao
+        layDat['zao_m']     = zao_m
         layDat['zmax']    = zmax
         layDat['fr']      = fr
             
@@ -195,7 +197,7 @@ def mwCalc(waterDensity,lnaplDensity,lnaplViscosity,airWaterTension,lnaplWaterTe
         # print("-----")
 
         # Subset output to includ only the desired calculated values
-        outDat[locID]      = [layDat['Do'], layDat['Dom'], layDat['kro_avg'], layDat['zmax_m'], layDat['Kn_avg'], layDat['T_avg'], layDat['U'], layDat['vn_avg']]
+        outDat[locID]      = [layDat['Do'], layDat['Dom'], layDat['kro_avg'], layDat['zao_m'], layDat['Kn_avg'], layDat['T_avg'], layDat['U'], layDat['vn_avg']]
         
     return outDat
   
@@ -245,7 +247,7 @@ def gauss10m(a,b,j,funcName,inDat):
 def gfxm(z,j,funcName,inDat):
     # Initialize output data structure as a Python dictionary
     outDat = inDat;
-    
+
     Se_w = (1 + (inDat['alpha_o'][j] * z) ** inDat['N'][j]) ** (-inDat['M'][j])
     if (z - inDat['zao'] <= 0):  
         Se_t = 1
@@ -254,8 +256,8 @@ def gfxm(z,j,funcName,inDat):
         
     Sn_i = (1 - inDat['Swr'][j]) * (Se_t - Se_w) / (1 - inDat['fr'] * (1 + Se_w - Se_t))
     Sn_r = inDat['fr'] * Sn_i
-    Sn = Sn_r + (1 - inDat['Swr'][j] - Sn_r) * (Se_t - Se_w)
-    
+    Sn = (Sn_r + (1 - inDat['Swr'][j] - Sn_r) * (Se_t - Se_w))
+
     if funcName == "Do":
         outDat['Do'] = Sn * inDat['Por'][j]
         
