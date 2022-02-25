@@ -10,7 +10,11 @@
 
 <h3><b>What is the Vision Behind the Concawe LNAPL Toolbox?</b></h3>
 
-<h4>Concawe envisioned compiling a unique collection of useful tools, calculators, data, and resources to help LNAPL scientists and engineers better understand how to manage LNAPL at their sites.</h4>
+<h4>Concawe envisioned compiling a unique collection of useful tools, calculators, data, and resources to help LNAPL scientists and engineers better understand how to manage LNAPL at their sites.<br><br>
+
+Considerable efforts have been made to assure the accuracy and reliability of the information contained in this publication. However, neither Concawe nor any company participating in Concawe can accept liability for any loss, damage or injury whatsoever resulting from the use of this information. <br><br>
+
+This report does not necessarily represent the views of any company participating in Concawe.</h4>
 
 <h3><b>How is the Toolbox Organized?</b></h3>
 

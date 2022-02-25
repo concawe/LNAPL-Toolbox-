@@ -25,7 +25,7 @@ LNAPLMigrateUI <- function(id, label = "LNAPL Migrate"){
                                           ), # end column 1
                                    column(2,
                                           HTML("<h3><b>Inputs:</b></h3>"),
-                                          numericInput(ns("Trans"), HTML("LNAPL Transmissivity (m<sup>2</sup>/day)"), value = 1.18, min = 0, step = 0.1),
+                                          numericInput(ns("Trans"), HTML("LNAPL Transmissivity (m<sup>2</sup>/day)"), value = 0.1, min = 0, step = 0.1),
                                           numericInput(ns("Gradient"), HTML("LNAPL Gradient (m/m)"), value = 0.001, min = 0, step = 0.001),
                                           pickerInput(ns("Rate1"), HTML("NSZD Rate (L/ha/yr)"), 
                                                       choices = c(5000, 7300, 10000, 25000, 50000), 

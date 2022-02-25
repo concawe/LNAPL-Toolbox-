@@ -40,7 +40,7 @@ LNAPLPersistUI <- function(id, label = "LNAPL Persistence"){
                                HTML("<h3><b>Inputs:</b></h3>"),
                                numericInput(ns("initial_volume"),"Initial Volume of LNAPL Body (L)", 
                                             value = 250000),
-                               numericInput(ns("area"),"Area of LNAPL Body (ha)", value = 5),
+                               numericInput(ns("area"),"Area of LNAPL Body (ha)", value = 0.5),
                                numericInput(ns("nszd_rate"),"NSZD Rate (L/ha/yr)", value = 15000),
                                numericInput(ns("start_year"),"Model Start Year", value = 1965),
                                numericInput(ns("end_year"),"Model End Year", value = 2065)

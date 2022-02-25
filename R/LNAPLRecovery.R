@@ -38,10 +38,12 @@ LNAPLRecoveryUI <- function(id, label = "LNAPL Recovery"){
                                                                      "silt loam", "silty clay", "silty clay loam", "sand",
                                                                      "sandy clay","sandy clay loam","sandy loam","clayey sand",
                                                                      "clayey silt","fill","gravel",
-                                                                     "sandy silt","silty sand")),
+                                                                     "sandy silt","silty sand"),
+                                                         selected = "silt"),
                                           selectizeInput(ns("LNAPL"),"LNAPL Type",
-                                                         choices = c("crude oil", "gasoline", "diesel/kerosene/jetfuel", "heavy fuel oil")),
-                                          numericInput(ns("thickness"),"Thickness of LNAPL in Well (m)", value = 10),
+                                                         choices = c("crude oil", "gasoline", "diesel/kerosene/jetfuel", "heavy fuel oil"),
+                                                         selected = "gasoline"),
+                                          numericInput(ns("thickness"),"Thickness of LNAPL in Well (m)", value = 0.8),
                                           numericInput(ns("delta_thickness"),"LNAPL Gradient (m/m)", value = 0.01),
                                           HTML("<i>Note: LNAPL Gradient only affects results for LNAPL Darcy Flux and LNAPL Average Seepage Velocity.</i>")
                                    ), # end column 2
@@ -138,7 +140,7 @@ LNAPLRecoveryServer <- function(id) {
                         'LNAPL Specific Volume (m<sup>3</sup>/m<sup>2</sup>)',
                         'LNAPL Mobile Specific Volume (m<sup>3</sup>/m<sup>3</sup>)',
                         'LNAPL Average Relative Permeability (unitless)',
-                        'LNAPL Average Hydraulic Conductivity (m/d)',
+                        'LNAPL Average Conductivity (m/d)',
                         'LNAPL Darcy Flux (m/d)',
                         'Average LNAPL Volumetric Content (unitless)',
                         'LNAPL Average Seepage Velocity (m/d)')

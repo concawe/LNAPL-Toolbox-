@@ -39,8 +39,10 @@ shinyUI <- navbarPage(theme="styles.css",
                    
                    tabPanel("Toolbox Overview",
                             fluidRow(
+                              column(2),
                               column(8,
-                                     includeMarkdown("./www/01_LNAPL-Overview/app_info.md"))
+                                     includeMarkdown("./www/01_LNAPL-Overview/app_info.md")),
+                              column(2)
                             )# end Fluid Row
                    ), #end LNAPL Overview tab
 

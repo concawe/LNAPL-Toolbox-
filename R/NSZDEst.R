@@ -136,7 +136,7 @@ NSZDEstServer <- function(id) {
       updateSelectizeInput(
         session, "units_out", server = TRUE, 
         choices = data_for_select_out, 
-        selected = data_for_select_out[[1]][1], 
+        selected = data_for_select_out[[1]][2], 
         
         options = list(render = I(
           '{ option: function(item, escape) {

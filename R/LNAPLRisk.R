@@ -39,14 +39,14 @@ LNAPLRiskUI <- function(id, label = "LNAPL Risk"){
                         ), # end column 1
                         column(2, style='border-right: 1px solid black',
                                HTML("<h3><b>Model Inputs:</b></h3>"),
-                               numericInput(ns("K"),"Hydraulic Conductivity (m/day)", value = 1000, min = 0, step = 0.1),
+                               numericInput(ns("K"),"Hydraulic Conductivity (cm/s)", value = 0.01, min = 0, step = 0.1),
                                numericInput(ns("h"),"Hydraulic Gradient (m/m)", value = 0.005, min = 0, step = 0.001),
-                               numericInput(ns("W"),"Width of LNAPL Lens (m)", value = 10, min = 0),
+                               numericInput(ns("W"),"Width of LNAPL Lens (m)", value = 50, min = 0),
                                numericInput(ns("thick"), "Average Thickness of LNAPL Lens (m)", value = 0.5, min = 0, step = 0.1),
                                # numericInput(ns("den"), HTML("Density of LNAPL (g/cm<sup>3</sup>)"), value = 0.78, min = 0, max = 1, step = 0.1),
-                               numericInput(ns("time"), "Time Step (days)", value = 0.005, min = 0),
+                               numericInput(ns("time"), "Time Step (days)", value = 0.1, min = 0),
                                numericInput(ns("Vol"), HTML("LNAPL Body Volume (Liters)"), value = 1000, min = 0, step = 1),
-                               numericInput(ns("len"), "Length of Simulation (years)", value = 0.1, min = 0, step = 1),
+                               numericInput(ns("len"), "Length of Simulation (years)", value = 10, min = 0, step = 1),
                                fluidRow(align = "center",
                                         br(),
                                         HTML("<i>Click Calculate to Update Plot</i>"),br(), br(),
@@ -59,7 +59,10 @@ LNAPLRiskUI <- function(id, label = "LNAPL Risk"){
                                DTOutput(ns("LNAPL_info")),
                                HTML("<i>Add up to 5 constituents. Double click to edit</i>"),
                                br(),br(),
-                               plotOutput(ns("Time_const_Plot"))
+                               fluidRow(align = "center", style='padding: 10px 10px 10px 10px;',
+                                        plotlyOutput(ns("Time_const_Plot")),
+                                        fluidRow(align = "left", style='padding: 10px 10px 10px 50px;',
+                                                 checkboxInput(ns("log_scale"), label = "Y-Axis Log Scale", value = F)))
                         ) # end column 3
                       ) # end fluid row
              ), # end Tier 2
@@ -109,11 +112,11 @@ LNAPLRiskServer <- function(id) {
                   ))
         )# end Table 2
       
-      # Tier-2 ----------------------
+      # Tier 2 ----------------------
       ## Editable Input Table --------------
       #Starting Values
       info <- reactiveVal(data.frame(`LNAPL_Constituents` = c("benzene", "toluene", "other", "", ""),
-                                     `Volume_fraction` = c(0.89,0.1, 0.01, NA, NA),
+                                     `Volume_fraction` = c(0.05,0.1, 0.85, NA, NA),
                                      MW = c(78.1, 92.1, 100, NA, NA),
                                      Solubility = c(1770, 530, 10, NA, NA),
                                      Density = c(0.87, 0.74, 0.78, NA, NA)))
@@ -156,11 +159,12 @@ LNAPLRiskServer <- function(id) {
             input$Vol > 0,
             input$len > 0,
             length((info() %>% na.omit())$LNAPL_Constituents) >= 2,
-            length((info() %>% na.omit())$LNAPL_Constituents) == length(unique((info() %>% na.omit())$LNAPL_Constituents)))
+            length((info() %>% na.omit())$LNAPL_Constituents) == length(unique((info() %>% na.omit())$LNAPL_Constituents)),
+            input$len/input$time <= 500)
     
         ccd <- info() %>% na.omit()
-        
-        cd <- partModel(input$K, input$h, input$W, input$thick, input$time, input$Vol/1000, 
+
+        cd <- partModel(input$K*864, input$h, input$W, input$thick, input$time, input$Vol/1000, 
                         as.character(ccd$LNAPL_Constituents), 
                         as.numeric(ccd$Volume_fraction), 
                         as.numeric(ccd$MW), 
@@ -184,25 +188,36 @@ LNAPLRiskServer <- function(id) {
         }
         
         cd$name <- factor(cd$name, levels = ccd$LNAPL_Constituents, order = T)
+        
+        # Replacing Values less then 1e-7 with 1e-7 (due to computing restrictions)
+        cd <- cd %>% 
+          mutate(value = ifelse(value <= 1e-7, 1e-7, value)) %>%
+          rename(Constituents = name)
+        
         model(as.data.frame(cd))
 
-        color <- plot_col[1:length(unique(cd$name))]
-        names(color) <- unique(cd$name)
+
+        color <- plot_col[1:length(unique(cd$Constituents))]
+        names(color) <- unique(cd$Constituents)
         
         v$plot <- ggplot(data = cd) +
-          geom_path(aes(x = `Time (yrs)`, y = value, group = name, color = name), size = 2) +
-          scale_x_continuous(labels = scales::label_comma(accuracy = NULL, big.mark = ',', decimal.mark = '.')) +
-          scale_y_continuous(labels = scales::label_comma(accuracy = NULL, big.mark = ',', decimal.mark = '.')) +
+          geom_path(aes(x = `Time (yrs)`, y = value, color = Constituents), size = 2) +
+          scale_x_continuous(expand = c(0,0), labels = scales::label_comma(accuracy = NULL, big.mark = ',', decimal.mark = '.')) +
+          scale_y_continuous(limits = c(1e-6, NA), expand = c(0,0), labels = scales::label_comma(accuracy = NULL, big.mark = ',', decimal.mark = '.')) +
           scale_color_manual(values = color) +
           labs(x = "Time (years)", y = "Concentration (mg/L)") +
-          theme + theme(legend.position = "bottom")
+          theme_bw() +
+          theme(legend.position = "bottom")
+        
         
       }) # end model calc
       
       ## Plot ----------
-      output$Time_const_Plot <- renderPlot({
+      output$Time_const_Plot <- renderPlotly({
         
         validate(need(!is.null(model()), "Click Calculate Button"))
+        
+        validate(need(input$len/input$time <= 500, "Please select a larger time step."))
 
 
         if (is.null(v$plot)){print("Click Calculate Button")}
@@ -221,8 +236,14 @@ LNAPLRiskServer <- function(id) {
         validate(need(input$time > 0, "Time step is invalid"))
         validate(need(input$Vol > 0, "Release volume of LNAPL is invalid"))
         validate(need(input$len > 0, "Length of simulation is invalid"))
-
-        v$plot
+        
+        if(input$log_scale == T){
+          v <- v$plot + 
+            scale_y_log10(limits = c(1e-6, NA), expand = c(0,0), labels = scales::label_comma(accuracy = NULL, big.mark = ',', decimal.mark = '.'))
+        }else{
+          v <- v$plot
+        }
+        ggplotly(v)
 
       })
     }

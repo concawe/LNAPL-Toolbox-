@@ -7,11 +7,11 @@ This tool provides an approximate indicator of recoverability based on the new L
 
 <h3 style='color: #ff0000'>Step 1</h3>
 
-<h4>Get the Ratio of Apparent Thickness to “True Thickness” based on soil type (Reidy et al., 1990). </h4>
+<h4>Get the Ratio of Apparent Thickness to “True Thickness” (now referred to as “specific volume”) based on soil type (Reidy et al., 1990). </h4>
 
 <h3 style='color: #ff0000'>Step 2</h3>
 
-<h4>Multiply this Ratio by the apparent thickness (measured thickness) in the monitoring well of interest to get a soil type adjusted estimate for True Thickness (the thickness of soil containing LNAPL in the formation).</h4>
+<h4>Multiply this Ratio by the apparent thickness (measured thickness) in the monitoring well of interest to get a soil type adjusted estimate for True Thickness (“specific volume”).</h4>
 <br>
 
 <p align="center">

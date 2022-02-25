@@ -80,18 +80,23 @@ LNAPLPresentUI <- function(id, label = "LNAPL Present"){
                                                                               "Mobile LNAPL Specific Volume", 
                                                                               "Average LNAPL Relative Permeability",
                                                                               "Apparent Thickness of LNAPL", 
-                                                                              "Average LNAPL Hydraulic Conductivity",
+                                                                              "Average LNAPL Conductivity",
                                                                               "Average Transmissivity",
                                                                               "LNAPL Unit Flux", 
                                                                               "Average LNAPL Seepage Velocity"),
                                                                   selected = "LNAPL Specific Volume"))),
                                           withSpinner(leafletOutput(ns("map_holder"), height = 600)), br(),
-                                          uiOutput(ns("Heatmap")), br(),
-                                          HTML("<h4><i>Control Parameters for Heatmap:</i></h4>"),
+                                          uiOutput(ns("Heatmap")), 
+                                          HTML("<i>This is a relatively simple mapping system where a heat map is developed where a certain region 
+                                               around each well is assigned a color based on the parameter value for this well. </i>"), br(),
+                                          HTML("<h4><i>Control Parameters for Heat Map Appearance:</i></h4>"),
                                           fluidRow(
-                                            column(4, align = "center", numericInput(ns("radius"), "Radius", value = 15, min = 1, width = '200px')),
-                                            column(4, align = "center", numericInput(ns("blur"), "Blur", value = 30, min = 1, width = '200px')),
-                                            column(4, align = "center", numericInput(ns("max"), "Maximum Point Intensity", value = 0.25, min = 0.00000001, width = '200px')))
+                                            column(6, align = "center", sliderInput(ns("radius"), "Radius", value = 100, min = 1, max = 100, width = '200px'),
+                                                   HTML("<i>Controls the spread of the heatmap around the measured values.</i>")),
+                                            column(6, align = "center", sliderInput(ns("blur"), "Blur", value = 30, min = 1, max = 30, width = '200px'),
+                                                   HTML("<i>Controls the blur around each measured value.</i>"))#,
+                                            # column(4, align = "center", numericInput(ns("max"), "Maximum Point Intensity", value = 0.25, min = 0.00000001, width = '200px'))
+                                            )
                                           ),
                                  tabPanel("Interpolation", 
                                           br(),
@@ -104,14 +109,14 @@ LNAPLPresentUI <- function(id, label = "LNAPL Present"){
                                                                               "Mobile LNAPL Specific Volume", 
                                                                               "Average LNAPL Relative Permeability",
                                                                               "Apparent Thickness of LNAPL", 
-                                                                              "Average LNAPL Hydraulic Conductivity",
+                                                                              "Average LNAPL Conductivity",
                                                                               "Average Transmissivity",
                                                                               "LNAPL Unit Flux", 
                                                                               "Average LNAPL Seepage Velocity"),
                                                                   selected = "LNAPL Specific Volume"))),
                                           HTML("<p><i>To refine the area of interpolation use the draw tools in the upper left-hand corner to 
                                                  draw the area you want to interpolate over. To remove the shape and reset the map click 'Calculate' again. 
-                                               To increase the area of interpolation, include wells (real or fictional) that gave bi apparent LNAPL thickness in the monitoring well database.</i></p>"),
+                                               At least <b>3 wells</b> must be present for interpolation.</i></p>"),
                                           withSpinner(leafletOutput(ns("nn_map"), height = 600)), br(),
                                           uiOutput(ns("Total_LNAPLVol")), br(),
                                           HTML("<p>For more information, or to learn how to perform your own interpolation, go to this 
@@ -267,7 +272,7 @@ LNAPLPresentServer <- function(id) {
           x == "Mobile LNAPL Specific Volume" ~ "Do_mobile_m3_m2",
           x == "Average LNAPL Relative Permeability" ~ "kro_avg",
           x == "Apparent Thickness of LNAPL" ~ "zmax_m",
-          x == "Average LNAPL Hydraulic Conductivity" ~ "KLNAPL_avg_cm_d",
+          x == "Average LNAPL Conductivity" ~ "KLNAPL_avg_cm_d",
           x == "Average Transmissivity" ~ "T_avg_m2_d",
           x == "LNAPL Unit Flux" ~ "ULNAPL_m2_d",
           x == "Average LNAPL Seepage Velocity" ~ "vLNAPL_avg_m_d")
@@ -278,7 +283,7 @@ LNAPLPresentServer <- function(id) {
           x == "Mobile LNAPL Specific Volume" ~ "cm<sup>3</sup>/cm<sup>2</sup>",
           x == "Average LNAPL Relative Permeability" ~ "",
           x == "Apparent Thickness of LNAPL" ~ "m",
-          x == "Average LNAPL Hydraulic Conductivity" ~ "cm/d",
+          x == "Average LNAPL Conductivity" ~ "cm/d",
           x == "Average Transmissivity" ~ "cm<sup>2</sup>/d",
           x == "LNAPL Unit Flux" ~ "cm<sup>2</sup>/d",
           x == "Average LNAPL Seepage Velocity" ~ "cm/d")
@@ -289,7 +294,7 @@ LNAPLPresentServer <- function(id) {
           x == "Mobile LNAPL Specific Volume" ~ plot_col[1],
           x == "Average LNAPL Relative Permeability" ~ plot_col[2],
           x == "Apparent Thickness of LNAPL" ~ plot_col[3],
-          x == "Average LNAPL Hydraulic Conductivity" ~ plot_col[4],
+          x == "Average LNAPL Conductivity" ~ plot_col[4],
           x == "Average Transmissivity" ~ plot_col[5],
           x == "LNAPL Unit Flux" ~ plot_col[6],
           x == "Average LNAPL Seepage Velocity" ~ plot_col[7])
@@ -317,7 +322,7 @@ LNAPLPresentServer <- function(id) {
           x == "Mobile LNAPL Specific Volume" ~ "Do_mobile_m3_m2",
           x == "Average LNAPL Relative Permeability" ~ "kro_avg",
           x == "Apparent Thickness of LNAPL" ~ "zmax_m",
-          x == "Average LNAPL Hydraulic Conductivity" ~ "KLNAPL_avg_cm_d",
+          x == "Average LNAPL Conductivity" ~ "KLNAPL_avg_cm_d",
           x == "Average Transmissivity" ~ "T_avg_m2_d",
           x == "LNAPL Unit Flux" ~ "ULNAPL_m2_d",
           x == "Average LNAPL Seepage Velocity" ~ "vLNAPL_avg_m_d")
@@ -328,7 +333,7 @@ LNAPLPresentServer <- function(id) {
           x == "Mobile LNAPL Specific Volume" ~ "cm<sup>3</sup>/cm<sup>2</sup>",
           x == "Average LNAPL Relative Permeability" ~ "",
           x == "Apparent Thickness of LNAPL" ~ "m",
-          x == "Average LNAPL Hydraulic Conductivity" ~ "cm/d",
+          x == "Average LNAPL Conductivity" ~ "cm/d",
           x == "Average Transmissivity" ~ "cm<sup>2</sup>/d",
           x == "LNAPL Unit Flux" ~ "cm<sup>2</sup>/d",
           x == "Average LNAPL Seepage Velocity" ~ "cm/d")
@@ -339,7 +344,7 @@ LNAPLPresentServer <- function(id) {
           x == "Mobile LNAPL Specific Volume" ~ plot_col[1],
           x == "Average LNAPL Relative Permeability" ~ plot_col[2],
           x == "Apparent Thickness of LNAPL" ~ plot_col[3],
-          x == "Average LNAPL Hydraulic Conductivity" ~ plot_col[4],
+          x == "Average LNAPL Conductivity" ~ plot_col[4],
           x == "Average Transmissivity" ~ plot_col[5],
           x == "LNAPL Unit Flux" ~ plot_col[6],
           x == "Average LNAPL Seepage Velocity" ~ plot_col[7])
@@ -461,7 +466,7 @@ LNAPLPresentServer <- function(id) {
                             'Mobile LNAPL Specific Volume (cm3/cm2)',
                             'Avg. LNAPL Relative Permeability',
                             'Apparent Thickness of LNAPL (m)',
-                            'Avg. LNAPL Hydraulic Conductivity (cm/d)',
+                            'Avg. LNAPL Conductivity (cm/d)',
                             'Avg. Transmissivity (cm2/d)',
                             'LNAPL Unit Flux (cm2/d)',
                             'Avg. LNAPL Seepage Velocity (cm/d)')
@@ -692,10 +697,9 @@ LNAPLPresentServer <- function(id) {
         input$Parameters
         input$calculate
         input$radius
-        input$max
+        # input$max
         input$blur
         },{
-          
           # Remove markers
           proxy <- leafletProxy("map_holder") %>%
             clearMarkers() %>%
@@ -706,7 +710,7 @@ LNAPLPresentServer <- function(id) {
 
           validate(need(dim(cd)[1] > 0, ''))
           validate(need(input$radius > 0, ''))
-          validate(need(input$max > 0, ''))
+          # validate(need(input$max > 0, ''))
           validate(need(input$blur >= 1, ''))
           
           x <- input$Parameters
@@ -717,13 +721,13 @@ LNAPLPresentServer <- function(id) {
             x == "Mobile LNAPL Specific Volume" ~ "(cm<sup>3</sup>/cm<sup>2</sup>)",
             x == "Average LNAPL Relative Permeability" ~ "",
             x == "Apparent Thickness of LNAPL" ~ "(m)",
-            x == "Average LNAPL Hydraulic Conductivity" ~ "(cm/d)",
+            x == "Average LNAPL Conductivity" ~ "(cm/d)",
             x == "Average Transmissivity" ~ "(cm<sup>2</sup>/d)",
             x == "LNAPL Unit Flux" ~ "(cm<sup>2</sup>/d)",
             x == "Average LNAPL Seepage Velocity" ~ "(cm/d)")
           
           
-          pal <- colorNumeric(c("white","blue"), cd$Result,
+          pal <- colorNumeric("viridis", cd$Result,
                               na.color = "transparent")
           
           proxy <- proxy  %>%
@@ -733,8 +737,9 @@ LNAPLPresentServer <- function(id) {
                              popup = ~pop,
                              color = "black", fillColor = ~color, radius=4, stroke = TRUE,
                              fillOpacity = 0.8, weight = .5, opacity = .8) %>%
-            addHeatmap(data =cd, lng = ~Longitude, lat = ~Latitude, intensity = ~Result, gradient = "blue",
-                       max = input$max, blur = input$blur, radius = input$radius, group = "heatmap") %>%
+            addHeatmap(data =cd, lng = ~Longitude, lat = ~Latitude, minOpacity = min(cd$Result, na.rm = T), 
+                       intensity = ~Result, gradient = "viridis",
+                       max = max(cd$Result, na.rm = T), blur = input$blur, radius = input$radius, group = "heatmap") %>%
             addLegend("bottomright", pal = pal, values = cd$Result,
                       title = gsub("\n", "<br>", paste(str_wrap(input$Parameters, 20), units)), 
                       opacity = 0.6, layerId = "Legend")
@@ -755,7 +760,7 @@ LNAPLPresentServer <- function(id) {
 
           validate(need(dim(cd)[1] > 0, ''))
           validate(need(input$radius > 0, ''))
-          validate(need(input$max > 0, ''))
+          # validate(need(input$max > 0, ''))
           validate(need(input$blur >= 1, ''))
           
           x <- input$Parameters
@@ -766,12 +771,12 @@ LNAPLPresentServer <- function(id) {
             x == "Mobile LNAPL Specific Volume" ~ "(cm<sup>3</sup>/cm<sup>2</sup>)",
             x == "Average LNAPL Relative Permeability" ~ "",
             x == "Apparent Thickness of LNAPL" ~ "(m)",
-            x == "Average LNAPL Hydraulic Conductivity" ~ "(cm/d)",
+            x == "Average LNAPL Conductivity" ~ "(cm/d)",
             x == "Average Transmissivity" ~ "(cm<sup>2</sup>/d)",
             x == "LNAPL Unit Flux" ~ "(cm<sup>2</sup>/d)",
             x == "Average LNAPL Seepage Velocity" ~ "(cm/d)")
 
-          pal <- colorNumeric(c("white","blue"), cd$Result,
+          pal <- colorNumeric(palette = "viridis", cd$Result,
                               na.color = "transparent")
 
           # Create map to export
@@ -781,8 +786,9 @@ LNAPLPresentServer <- function(id) {
                              popup = ~pop,
                              color = "black", fillColor = ~color, radius=4, stroke = TRUE,
                              fillOpacity = 0.8, weight = .5, opacity = .8) %>%
-            addHeatmap(data =cd, lng = ~Longitude, lat = ~Latitude, intensity = ~Result, gradient = "blue",
-                       max = input$max, blur = input$blur, radius = input$radius, group = "heatmap") %>%
+            addHeatmap(data =cd, lng = ~Longitude, lat = ~Latitude, minOpacity = min(cd$Result, na.rm = T), 
+                       intensity = ~Result, gradient = "viridis",
+                       max = max(cd$Result, na.rm = T), blur = input$blur, radius = input$radius, group = "heatmap") %>%
             addLegend("bottomright", pal = pal, values = cd$Result,
                       title = gsub("\n", "<br>", paste(str_wrap(input$Parameters, 20), units)), 
                       opacity = 0.6, layerId = "Legend")%>%
@@ -828,12 +834,13 @@ LNAPLPresentServer <- function(id) {
           clearGroup(group = "image")
         
         cd <- map_cd_nn() %>% na.omit()
+        print(dim(cd)[1])
         req(dim(cd)[1] > 3)
         
         nnmsk <- near_neigh()
         req(nnmsk)
         
-        pal <- colorNumeric(c("#0C2C84", "#41B6C4", "#FFFFCC"), nnmsk$Result,
+        pal <- colorNumeric(palette = "viridis", nnmsk$Result,
                             na.color = "transparent")
 
         nnmsk$colors <- pal(nnmsk$Result)
@@ -846,7 +853,7 @@ LNAPLPresentServer <- function(id) {
           x == "Mobile LNAPL Specific Volume" ~ "(cm<sup>3</sup>/cm<sup>2</sup>)",
           x == "Average LNAPL Relative Permeability" ~ "",
           x == "Apparent Thickness of LNAPL" ~ "(m)",
-          x == "Average LNAPL Hydraulic Conductivity" ~ "(cm/d)",
+          x == "Average LNAPL Conductivity" ~ "(cm/d)",
           x == "Average Transmissivity" ~ "(cm<sup>2</sup>/d)",
           x == "LNAPL Unit Flux" ~ "(cm<sup>2</sup>/d)",
           x == "Average LNAPL Seepage Velocity" ~ "(cm/d)")
@@ -877,7 +884,7 @@ LNAPLPresentServer <- function(id) {
         
         v <- near_neigh_poly()
         
-        pal <- colorNumeric(c("#0C2C84", "#41B6C4", "#FFFFCC"), v$Result,
+        pal <- colorNumeric("viridis", v$Result,
                             na.color = "transparent")
         
         v$colors <- pal(v$Result)
@@ -923,7 +930,7 @@ LNAPLPresentServer <- function(id) {
           nnmsk <- v_used() %>% na.omit()
           cd <- map_cd_nn() %>% na.omit()
 
-          pal <- colorNumeric(c("#0C2C84", "#41B6C4", "#FFFFCC"), nnmsk$Result,
+          pal <- colorNumeric("viridis", nnmsk$Result,
                               na.color = "transparent")
           
           x <- input$Parameters
@@ -934,7 +941,7 @@ LNAPLPresentServer <- function(id) {
             x == "Mobile LNAPL Specific Volume" ~ "(cm<sup>3</sup>/cm<sup>2</sup>)",
             x == "Average LNAPL Relative Permeability" ~ "",
             x == "Apparent Thickness of LNAPL" ~ "(m)",
-            x == "Average LNAPL Hydraulic Conductivity" ~ "(cm/d)",
+            x == "Average LNAPL Conductivity" ~ "(cm/d)",
             x == "Average Transmissivity" ~ "(cm<sup>2</sup>/d)",
             x == "LNAPL Unit Flux" ~ "(cm<sup>2</sup>/d)",
             x == "Average LNAPL Seepage Velocity" ~ "(cm/d)")
@@ -988,7 +995,7 @@ LNAPLPresentServer <- function(id) {
           x == "Mobile LNAPL Specific Volume" ~ "Do_mobile_m3_m2",
           x == "Average LNAPL Relative Permeability" ~ "kro_avg",
           x == "Apparent Thickness of LNAPL" ~ "zmax_m",
-          x == "Average LNAPL Hydraulic Conductivity" ~ "KLNAPL_avg_cm_d",
+          x == "Average LNAPL Conductivity" ~ "KLNAPL_avg_cm_d",
           x == "Average Transmissivity" ~ "T_avg_m2_d",
           x == "LNAPL Unit Flux" ~ "ULNAPL_m2_d",
           x == "Average LNAPL Seepage Velocity" ~ "vLNAPL_avg_m_d")
@@ -1003,7 +1010,7 @@ LNAPLPresentServer <- function(id) {
                                    'Mobile LNAPL Specific Volume<br>(cm<sup>3</sup>/cm<sup>2</sup>)',
                                    'Avg. LNAPL Relative Permeability',
                                    'Apparent Thickness of LNAPL<br>(m)',
-                                   'Avg. LNAPL Hydraulic Conductivity<br>(cm/d)',
+                                   'Avg. LNAPL Conductivity<br>(cm/d)',
                                    'Avg. Transmissivity (cm<sup>2</sup>/d)',
                                    'LNAPL Unit Flux<br>(cm<sup>2</sup>/d)',
                                    'Avg. LNAPL Seepage Velocity<br>(cm/d)'),
