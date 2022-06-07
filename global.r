@@ -104,6 +104,23 @@ fmt_dcimals <- function(decimals=5, format = "G"){
 }
 
 # Source Python Code ------------------
+# Define any Python packages needed for the app
+
+PYTHON_DEPENDENCIES = c("argparse", 'numpy')
+
+virtualenv_dir = Sys.getenv('VIRTUALENV_NAME')
+python_path = Sys.getenv('PYTHON_PATH')
+
+# Create virtual env and install dependencies
+
+if(Sys.info()[['user']] == 'shiny'){
+
+  # Create virtual env and install dependencies
+  reticulate::virtualenv_create(envname = virtualenv_dir, python = python_path)
+  reticulate::virtualenv_install(virtualenv_dir, packages = PYTHON_DEPENDENCIES, ignore_installed=TRUE)
+  reticulate::use_virtualenv(virtualenv_dir, required = T)
+}
+
 source_python("./R/Python_Code/LNAPL_SubsurfVolExt.py")
 source_python("./R/Python_Code/LNAPL_NSZDTempEnhanceCalc.py")
 source_python("./R/Python_Code/LNAPL_NSZDSourceLifetime.py")

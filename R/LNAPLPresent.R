@@ -38,7 +38,7 @@ LNAPLPresentUI <- function(id, label = "LNAPL Present"){
                                fluidRow(align = "center",
                                         fluidRow(align = "center",
                                                  column(6, 
-                                                        downloadButton(ns("download_data"), "Download Data Template", style=button_style),
+                                                        HTML("<a class='btn btn-default btn btn-default shiny-download-link shiny-bound-output button1' href='02_LNAPL-Volume/Tier-2/LNAPL_Volume_Data_Template.xlsx' target = '_blank'>Download Data Template</a>"),
                                                         br(), br()),
                                                  column(6, fileInput(ns("file"), "Choose Input File",
                                                                      multiple = F,
@@ -435,16 +435,6 @@ LNAPLPresentServer <- function(id) {
         },
         content = function(con){
           file.copy("./www/02_LNAPL-Volume/Tier-2/Soil-Classification.pdf", con)
-        }
-      )# end download_data
-
-      ## Download Data Template ------------------------
-      output$download_data <- downloadHandler(
-        filename = function(){
-          paste("LNAPL_Volume_Data_Template","xlsx",sep=".")
-        },
-        content = function(con){
-          file.copy("./data/LNAPL_Volume_Data_Template.xlsx", con)
         }
       )# end download_data
 
@@ -1030,4 +1020,5 @@ LNAPLPresentServer <- function(id) {
     }
   )
 }
+
       
