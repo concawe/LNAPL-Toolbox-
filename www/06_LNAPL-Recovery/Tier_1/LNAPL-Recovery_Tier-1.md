@@ -11,7 +11,7 @@ This tool provides an approximate indicator of recoverability based on the new L
 
 <h3 style='color: #ff0000'>Step 2</h3>
 
-<h4>Multiply this Ratio by the apparent thickness (measured thickness) in the monitoring well of interest to get a soil type adjusted estimate for True Thickness (“specific volume”).</h4>
+<h4>Divide the apparent thickness (measured thickness) in the monitoring well of interest by this Ratio to get a soil type adjusted estimate for True Thickness (“specific volume”).</h4>
 <br>
 
 <p align="center">
