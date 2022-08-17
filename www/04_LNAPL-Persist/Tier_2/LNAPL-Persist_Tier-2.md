@@ -30,7 +30,7 @@ Overall, the linear model will present a best-case estimate for the LNAPL lifeti
 Guidance on the selection of specific input parameters for this tool is provided in <b>Section 6.2</b> of the User’s Manual which can be seen here:
 
 <div style = "text-align:center;">
-<a class="btn btn-default btn btn-default shiny-download-link shiny-bound-output button1" onclick="window.open('https://www.concawe.eu/wp-content/uploads/Rpt_5-22.pdf#page=39')" role="button">Download User's Manual</a>
+<a class="btn btn-default btn btn-default shiny-download-link shiny-bound-output button1" onclick="window.open('https://www.concawe.eu/wp-content/uploads/Rpt_22-5.pdf#page=39')" role="button">Download User's Manual</a>
 <a class="btn btn-default btn btn-default shiny-download-link shiny-bound-output button1" onclick="window.open('04_LNAPL-Persist/Tier_2/LNAPL_Lifetime_Calculator_Example.pdf')" role="button">Download Example</a>
 </div>
 
