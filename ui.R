@@ -60,7 +60,7 @@ shinyUI <- navbarPage(theme="styles.css",
                    
                    footer = HTML('<a href="https://www.gsi-net.com/en/" target="_blank">
                    <div style="background-color: #005a87; padding: 10px; margin-right: 0;  margin-left: 0;">
-                                   <h3 class="featurette-heading" style="color:white;" >Powered by GSI Environmental, 2021</h3>
+                                   <h3 class="featurette-heading" style="color:white;" >Powered by GSI Environmental, 2021-2023</h3>
                                    </div></a>')
                    
 

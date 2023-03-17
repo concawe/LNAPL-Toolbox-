@@ -82,7 +82,7 @@ LNAPLPresentUI <- function(id, label = "LNAPL Present"){
                                                                               "Apparent Thickness of LNAPL", 
                                                                               "Average LNAPL Conductivity",
                                                                               "Average Transmissivity",
-                                                                              "LNAPL Unit Flux", 
+                                                                              "LNAPL Darcy Flux", 
                                                                               "Average LNAPL Seepage Velocity"),
                                                                   selected = "LNAPL Specific Volume"))),
                                           withSpinner(leafletOutput(ns("map_holder"), height = 600)), br(),
@@ -111,7 +111,7 @@ LNAPLPresentUI <- function(id, label = "LNAPL Present"){
                                                                               "Apparent Thickness of LNAPL", 
                                                                               "Average LNAPL Conductivity",
                                                                               "Average Transmissivity",
-                                                                              "LNAPL Unit Flux", 
+                                                                              "LNAPL Darcy Flux", 
                                                                               "Average LNAPL Seepage Velocity"),
                                                                   selected = "LNAPL Specific Volume"))),
                                           HTML("<p><i>To refine the area of interpolation use the draw tools in the upper left-hand corner to 
@@ -237,7 +237,7 @@ LNAPLPresentServer <- function(id) {
         # Assign Variable names to list items
         for(i in 1:length(cd)){
           cd[[i]] <- as.character(cd[[i]])
-          names(cd[[i]]) <- c("Do_m3_cm2", "Do_mobile_m3_cm2", "kro_avg", "zmax_m", "KLNAPL_avg_cm_d", "T_avg_m2_d", "ULNAPL_m2_d", "vLNAPL_avg_m_d")
+          names(cd[[i]]) <- c("Do_m3_cm2", "Do_mobile_m3_cm2", "kro_avg", "zmax_m", "KLNAPL_avg_m_d", "T_avg_m2_d", "ULNAPL_m2_d", "vLNAPL_avg_m_d")
         }
         
         # Change list into DF
@@ -250,7 +250,7 @@ LNAPLPresentServer <- function(id) {
         cd$Do_m3_m2 <- cd$Do_m3_cm2
         cd$Do_mobile_m3_m2 <- cd$Do_mobile_m3_cm2
         
-        cd <- cd %>% select(Location, Do_m3_m2, Do_mobile_m3_m2, kro_avg, zmax_m, KLNAPL_avg_cm_d, T_avg_m2_d, ULNAPL_m2_d, vLNAPL_avg_m_d)
+        cd <- cd %>% select(Location, Do_m3_m2, Do_mobile_m3_m2, kro_avg, zmax_m, KLNAPL_avg_m_d, T_avg_m2_d, ULNAPL_m2_d, vLNAPL_avg_m_d)
         }
         MW_Calcs(cd)
         
@@ -272,21 +272,21 @@ LNAPLPresentServer <- function(id) {
           x == "Mobile LNAPL Specific Volume" ~ "Do_mobile_m3_m2",
           x == "Average LNAPL Relative Permeability" ~ "kro_avg",
           x == "Apparent Thickness of LNAPL" ~ "zmax_m",
-          x == "Average LNAPL Conductivity" ~ "KLNAPL_avg_cm_d",
+          x == "Average LNAPL Conductivity" ~ "KLNAPL_avg_m_d",
           x == "Average Transmissivity" ~ "T_avg_m2_d",
-          x == "LNAPL Unit Flux" ~ "ULNAPL_m2_d",
+          x == "LNAPL Darcy Flux" ~ "ULNAPL_m2_d",
           x == "Average LNAPL Seepage Velocity" ~ "vLNAPL_avg_m_d")
         
         # Defining Units
         units <- case_when(
-          x == "LNAPL Specific Volume" ~  "cm<sup>3</sup>/cm<sup>2</sup>",
-          x == "Mobile LNAPL Specific Volume" ~ "cm<sup>3</sup>/cm<sup>2</sup>",
+          x == "LNAPL Specific Volume" ~  "m<sup>3</sup>/m<sup>2</sup>",
+          x == "Mobile LNAPL Specific Volume" ~ "m<sup>3</sup>/m<sup>2</sup>",
           x == "Average LNAPL Relative Permeability" ~ "",
           x == "Apparent Thickness of LNAPL" ~ "m",
-          x == "Average LNAPL Conductivity" ~ "cm/d",
-          x == "Average Transmissivity" ~ "cm<sup>2</sup>/d",
-          x == "LNAPL Unit Flux" ~ "cm<sup>2</sup>/d",
-          x == "Average LNAPL Seepage Velocity" ~ "cm/d")
+          x == "Average LNAPL Conductivity" ~ "m/d",
+          x == "Average Transmissivity" ~ "m<sup>2</sup>/d",
+          x == "LNAPL Darcy Flux" ~ "m<sup>2</sup>/d",
+          x == "Average LNAPL Seepage Velocity" ~ "m/d")
         
         # Defining Color
         color <- case_when(
@@ -296,7 +296,7 @@ LNAPLPresentServer <- function(id) {
           x == "Apparent Thickness of LNAPL" ~ plot_col[3],
           x == "Average LNAPL Conductivity" ~ plot_col[4],
           x == "Average Transmissivity" ~ plot_col[5],
-          x == "LNAPL Unit Flux" ~ plot_col[6],
+          x == "LNAPL Darcy Flux" ~ plot_col[6],
           x == "Average LNAPL Seepage Velocity" ~ plot_col[7])
         
         cd <- results %>% select(Location, Date, Latitude, Longitude, Result = !!var) %>%
@@ -322,21 +322,21 @@ LNAPLPresentServer <- function(id) {
           x == "Mobile LNAPL Specific Volume" ~ "Do_mobile_m3_m2",
           x == "Average LNAPL Relative Permeability" ~ "kro_avg",
           x == "Apparent Thickness of LNAPL" ~ "zmax_m",
-          x == "Average LNAPL Conductivity" ~ "KLNAPL_avg_cm_d",
+          x == "Average LNAPL Conductivity" ~ "KLNAPL_avg_m_d",
           x == "Average Transmissivity" ~ "T_avg_m2_d",
-          x == "LNAPL Unit Flux" ~ "ULNAPL_m2_d",
+          x == "LNAPL Darcy Flux" ~ "ULNAPL_m2_d",
           x == "Average LNAPL Seepage Velocity" ~ "vLNAPL_avg_m_d")
         
         # Defining Units
         units <- case_when(
-          x == "LNAPL Specific Volume" ~  "cm<sup>3</sup>/cm<sup>2</sup>",
-          x == "Mobile LNAPL Specific Volume" ~ "cm<sup>3</sup>/cm<sup>2</sup>",
+          x == "LNAPL Specific Volume" ~  "m<sup>3</sup>/m<sup>2</sup>",
+          x == "Mobile LNAPL Specific Volume" ~ "m<sup>3</sup>/m<sup>2</sup>",
           x == "Average LNAPL Relative Permeability" ~ "",
           x == "Apparent Thickness of LNAPL" ~ "m",
-          x == "Average LNAPL Conductivity" ~ "cm/d",
-          x == "Average Transmissivity" ~ "cm<sup>2</sup>/d",
-          x == "LNAPL Unit Flux" ~ "cm<sup>2</sup>/d",
-          x == "Average LNAPL Seepage Velocity" ~ "cm/d")
+          x == "Average LNAPL Conductivity" ~ "m/d",
+          x == "Average Transmissivity" ~ "m<sup>2</sup>/d",
+          x == "LNAPL Darcy Flux" ~ "m<sup>2</sup>/d",
+          x == "Average LNAPL Seepage Velocity" ~ "m/d")
         
         # Defining Color
         color <- case_when(
@@ -346,7 +346,7 @@ LNAPLPresentServer <- function(id) {
           x == "Apparent Thickness of LNAPL" ~ plot_col[3],
           x == "Average LNAPL Conductivity" ~ plot_col[4],
           x == "Average Transmissivity" ~ plot_col[5],
-          x == "LNAPL Unit Flux" ~ plot_col[6],
+          x == "LNAPL Darcy Flux" ~ plot_col[6],
           x == "Average LNAPL Seepage Velocity" ~ plot_col[7])
         
         cd <- results %>% select(Location, Date, Latitude, Longitude, Result = !!var, 
@@ -452,14 +452,14 @@ LNAPLPresentServer <- function(id) {
           cd <- full_join(loc() %>% select("Location", "Date"), cd, by = "Location")
 
           colnames(cd) <- c('Monitoring Well', 'Date',
-                            'LNAPL Specific Volume (cm3/cm2)',
-                            'Mobile LNAPL Specific Volume (cm3/cm2)',
+                            'LNAPL Specific Volume (m3/m2)',
+                            'Mobile LNAPL Specific Volume (m3/cm2)',
                             'Avg. LNAPL Relative Permeability',
                             'Apparent Thickness of LNAPL (m)',
-                            'Avg. LNAPL Conductivity (cm/d)',
-                            'Avg. Transmissivity (cm2/d)',
-                            'LNAPL Unit Flux (cm2/d)',
-                            'Avg. LNAPL Seepage Velocity (cm/d)')
+                            'Avg. LNAPL Conductivity (m/d)',
+                            'Avg. Transmissivity (m2/d)',
+                            'LNAPL Darcy Flux (m2/d)',
+                            'Avg. LNAPL Seepage Velocity (m/d)')
 
 
           # Create empty excel file
@@ -707,14 +707,14 @@ LNAPLPresentServer <- function(id) {
             
           # Defining Units
           units <- case_when(
-            x == "LNAPL Specific Volume" ~  "(cm<sup>3</sup>/cm<sup>2</sup>)",
-            x == "Mobile LNAPL Specific Volume" ~ "(cm<sup>3</sup>/cm<sup>2</sup>)",
+            x == "LNAPL Specific Volume" ~  "(m<sup>3</sup>/m<sup>2</sup>)",
+            x == "Mobile LNAPL Specific Volume" ~ "(m<sup>3</sup>/m<sup>2</sup>)",
             x == "Average LNAPL Relative Permeability" ~ "",
             x == "Apparent Thickness of LNAPL" ~ "(m)",
-            x == "Average LNAPL Conductivity" ~ "(cm/d)",
-            x == "Average Transmissivity" ~ "(cm<sup>2</sup>/d)",
-            x == "LNAPL Unit Flux" ~ "(cm<sup>2</sup>/d)",
-            x == "Average LNAPL Seepage Velocity" ~ "(cm/d)")
+            x == "Average LNAPL Conductivity" ~ "(m/d)",
+            x == "Average Transmissivity" ~ "(m<sup>2</sup>/d)",
+            x == "LNAPL Darcy Flux" ~ "(m<sup>2</sup>/d)",
+            x == "Average LNAPL Seepage Velocity" ~ "(m/d)")
           
           
           pal <- colorNumeric("viridis", cd$Result,
@@ -757,14 +757,14 @@ LNAPLPresentServer <- function(id) {
           
           # Defining Units
           units <- case_when(
-            x == "LNAPL Specific Volume" ~  "(cm<sup>3</sup>/cm<sup>2</sup>)",
-            x == "Mobile LNAPL Specific Volume" ~ "(cm<sup>3</sup>/cm<sup>2</sup>)",
+            x == "LNAPL Specific Volume" ~  "(m<sup>3</sup>/m<sup>2</sup>)",
+            x == "Mobile LNAPL Specific Volume" ~ "(m<sup>3</sup>/m<sup>2</sup>)",
             x == "Average LNAPL Relative Permeability" ~ "",
             x == "Apparent Thickness of LNAPL" ~ "(m)",
-            x == "Average LNAPL Conductivity" ~ "(cm/d)",
-            x == "Average Transmissivity" ~ "(cm<sup>2</sup>/d)",
-            x == "LNAPL Unit Flux" ~ "(cm<sup>2</sup>/d)",
-            x == "Average LNAPL Seepage Velocity" ~ "(cm/d)")
+            x == "Average LNAPL Conductivity" ~ "(m/d)",
+            x == "Average Transmissivity" ~ "(m<sup>2</sup>/d)",
+            x == "LNAPL Darcy Flux" ~ "(m<sup>2</sup>/d)",
+            x == "Average LNAPL Seepage Velocity" ~ "(m/d)")
 
           pal <- colorNumeric(palette = "viridis", cd$Result,
                               na.color = "transparent")
@@ -839,14 +839,14 @@ LNAPLPresentServer <- function(id) {
         
         # Defining Units
         units <- case_when(
-          x == "LNAPL Specific Volume" ~  "(cm<sup>3</sup>/cm<sup>2</sup>)",
-          x == "Mobile LNAPL Specific Volume" ~ "(cm<sup>3</sup>/cm<sup>2</sup>)",
+          x == "LNAPL Specific Volume" ~  "(m<sup>3</sup>/m<sup>2</sup>)",
+          x == "Mobile LNAPL Specific Volume" ~ "(m<sup>3</sup>/m<sup>2</sup>)",
           x == "Average LNAPL Relative Permeability" ~ "",
           x == "Apparent Thickness of LNAPL" ~ "(m)",
-          x == "Average LNAPL Conductivity" ~ "(cm/d)",
-          x == "Average Transmissivity" ~ "(cm<sup>2</sup>/d)",
-          x == "LNAPL Unit Flux" ~ "(cm<sup>2</sup>/d)",
-          x == "Average LNAPL Seepage Velocity" ~ "(cm/d)")
+          x == "Average LNAPL Conductivity" ~ "(m/d)",
+          x == "Average Transmissivity" ~ "(m<sup>2</sup>/d)",
+          x == "LNAPL Darcy Flux" ~ "(m<sup>2</sup>/d)",
+          x == "Average LNAPL Seepage Velocity" ~ "(m/d)")
 
         proxy <- proxy  %>%
           fitBounds(min(cd$Longitude), min(cd$Latitude), max(cd$Longitude), max(cd$Latitude)) %>%
@@ -927,14 +927,14 @@ LNAPLPresentServer <- function(id) {
           
           # Defining Units
           units <- case_when(
-            x == "LNAPL Specific Volume" ~  "(cm<sup>3</sup>/cm<sup>2</sup>)",
-            x == "Mobile LNAPL Specific Volume" ~ "(cm<sup>3</sup>/cm<sup>2</sup>)",
+            x == "LNAPL Specific Volume" ~  "(m<sup>3</sup>/m<sup>2</sup>)",
+            x == "Mobile LNAPL Specific Volume" ~ "(m<sup>3</sup>/m<sup>2</sup>)",
             x == "Average LNAPL Relative Permeability" ~ "",
             x == "Apparent Thickness of LNAPL" ~ "(m)",
-            x == "Average LNAPL Conductivity" ~ "(cm/d)",
-            x == "Average Transmissivity" ~ "(cm<sup>2</sup>/d)",
-            x == "LNAPL Unit Flux" ~ "(cm<sup>2</sup>/d)",
-            x == "Average LNAPL Seepage Velocity" ~ "(cm/d)")
+            x == "Average LNAPL Conductivity" ~ "(m/d)",
+            x == "Average Transmissivity" ~ "(m<sup>2</sup>/d)",
+            x == "LNAPL Darcy Flux" ~ "(m<sup>2</sup>/d)",
+            x == "Average LNAPL Seepage Velocity" ~ "(m/d)")
 
           nnmsk$colors <- pal(nnmsk$Result)
 
@@ -985,9 +985,9 @@ LNAPLPresentServer <- function(id) {
           x == "Mobile LNAPL Specific Volume" ~ "Do_mobile_m3_m2",
           x == "Average LNAPL Relative Permeability" ~ "kro_avg",
           x == "Apparent Thickness of LNAPL" ~ "zmax_m",
-          x == "Average LNAPL Conductivity" ~ "KLNAPL_avg_cm_d",
+          x == "Average LNAPL Conductivity" ~ "KLNAPL_avg_m_d",
           x == "Average Transmissivity" ~ "T_avg_m2_d",
-          x == "LNAPL Unit Flux" ~ "ULNAPL_m2_d",
+          x == "LNAPL Darcy Flux" ~ "ULNAPL_m2_d",
           x == "Average LNAPL Seepage Velocity" ~ "vLNAPL_avg_m_d")
 
         DT::datatable(cd,
@@ -996,14 +996,14 @@ LNAPLPresentServer <- function(id) {
                       fillContainer = F,
                       escape = F,
                       colnames = c('Location<br>ID', 'Date',
-                                   'LNAPL Specific Volume<br>(cm<sup>3</sup>/cm<sup>2</sup>)',
-                                   'Mobile LNAPL Specific Volume<br>(cm<sup>3</sup>/cm<sup>2</sup>)',
+                                   'LNAPL Specific Volume<br>(m<sup>3</sup>/m<sup>2</sup>)',
+                                   'Mobile LNAPL Specific Volume<br>(m<sup>3</sup>/m<sup>2</sup>)',
                                    'Avg. LNAPL Relative Permeability',
                                    'Apparent Thickness of LNAPL<br>(m)',
-                                   'Avg. LNAPL Conductivity<br>(cm/d)',
-                                   'Avg. Transmissivity (cm<sup>2</sup>/d)',
-                                   'LNAPL Unit Flux<br>(cm<sup>2</sup>/d)',
-                                   'Avg. LNAPL Seepage Velocity<br>(cm/d)'),
+                                   'Avg. LNAPL Conductivity<br>(m/d)',
+                                   'Avg. Transmissivity (m<sup>2</sup>/d)',
+                                   'LNAPL Darcy Flux<br>(m<sup>2</sup>/d)',
+                                   'Avg. LNAPL Seepage Velocity<br>(m/d)'),
                       options = list(paging = FALSE,
                                      searching = FALSE,
                                      scrollX = TRUE,

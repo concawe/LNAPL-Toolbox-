@@ -144,12 +144,12 @@ def mwCalc(waterDensity,lnaplDensity,lnaplViscosity,airWaterTension,lnaplWaterTe
         layDat['Por']     = Por
         layDat['Ksat']    = Ksat
         layDat['zao']     = zao
-        layDat['zao_m']     = zao_m
+        layDat['zao_m']   = zao_m
         layDat['zmax']    = zmax
         layDat['fr']      = fr
             
         # Output from code
-        calcVars = ['Do','Dom','kro_avg','Kn_avg','vn_avg']
+        calcVars = ['Do','Dom','kro_avg','Kn_avg']
         for calcVar in calcVars:
             layDat[calcVar]          = 0
             for layer in range(len(layInteg)):
@@ -164,14 +164,15 @@ def mwCalc(waterDensity,lnaplDensity,lnaplViscosity,airWaterTension,lnaplWaterTe
         layDat['Do'] = layDat['Do'] / 100
         layDat['Dom'] = layDat['Dom'] / 100
         layDat['kro_avg'] = layDat['kro_avg']
-        layDat['Kn_avg'] = layDat['Kn_avg'] * lnaplDensity / lnaplViscosity
-        layDat['vn_avg'] = layDat['vn_avg'] * lnaplDensity / lnaplViscosity * locR[locID]['LNAPL_Gradient']
+        layDat['Kn_avg'] = layDat['Kn_avg'] * lnaplDensity / lnaplViscosity / 100
         
         # Calculated from output
         layDat['zmax_m'] = layDat['zmax'] / 100
-        layDat['T_avg']  = layDat['Kn_avg'] / 100 * layDat['zmax_m']
-        layDat['U']      = layDat['T_avg'] * locR[locID]['LNAPL_Gradient']
-        
+        layDat['T_avg']  = layDat['Kn_avg'] * layDat['zmax_m']
+        layDat['U']      = layDat['Kn_avg'] * locR[locID]['LNAPL_Gradient']
+        layDat['lnaplVolCont'] = layDat['Do'] / layDat ['zmax_m']
+        layDat['vn_avg'] = layDat['Kn_avg'] * locR[locID]['LNAPL_Gradient'] / layDat['lnaplVolCont']
+
         # Print results to terminal - useful for debugging
         # print("Layer-specific Metrics >>>")
         # print("   Top:     " + str(layDat['Top']))
@@ -239,8 +240,6 @@ def gauss10m(a,b,j,funcName,inDat):
         outDat['kro_avg'] = outDat['gauss10']
     if funcName == "Kn_avg":
         outDat['Kn_avg']  = outDat['gauss10']
-    if funcName == "vn_avg":
-        outDat['vn_avg']  = outDat['gauss10']
                 
     return outDat
     
@@ -269,13 +268,7 @@ def gfxm(z,j,funcName,inDat):
     
     if funcName == "Kn_avg":
         outDat['Kn_avg'] = inDat['Ksat'][j] * math.sqrt(Sn) / inDat['zmax'] * ((1 - Se_w ** (1 / inDat['M'][j])) ** inDat['M'][j] - ((1 - Se_t ** (1 / inDat['M'][j])) ** inDat['M'][j])) ** 2
-        
-    if funcName == "vn_avg":
-        if (Sn == 0):
-            outDat['vn_avg'] = 0
-        else:
-            outDat['vn_avg'] = inDat['Ksat'][j] / Sn * math.sqrt(Sn) / inDat['zmax'] * ((1 - Se_w ** (1 / inDat['M'][j])) ** inDat['M'][j] - ((1 - Se_t ** (1 / inDat['M'][j])) ** inDat['M'][j])) ** 2
-        
+
     return outDat
 
 # # main program starts here

@@ -109,7 +109,7 @@ LNAPLRecoveryServer <- function(id) {
         # cd <- darcyCalc("silt","gasoline",10,0.001)
         values <- as.numeric(as.data.frame(cd)$Tn)
         
-        cd <- data.frame(Parameters = c('LNAPL Transmissivity (cm<sup>2</sup>/d)', 
+        cd <- data.frame(Parameters = c('LNAPL Transmissivity (m<sup>2</sup>/d)', 
                                         "Key threshold for LNAPL recoverability:  LNAPL Transmissivity above this range (numbers <i>within</i> this range are in a grey zone for recoverability)"), 
                          Values = c(formatC(values, digits = 2, big.mark = ",", format = "G"), 
                                     "0.0093 to 0.074 m<sup>2</sup>/day "))

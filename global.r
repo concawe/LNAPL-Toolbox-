@@ -41,6 +41,8 @@ require(plotly)
 library(rsconnect)
 
 library(reticulate)
+# py <- rminiconda::find_miniconda_python("concawe")
+# reticulate::use_python(py, required = TRUE)
 
 # Plot Parameters -------------
 # Colors
@@ -104,6 +106,8 @@ fmt_dcimals <- function(decimals=5, format = "G"){
 }
 
 # Source Python Code ------------------
+# Define any Python packages needed for the app
+
 # Define any Python packages needed for the app
 
 source_python("./R/Python_Code/LNAPL_SubsurfVolExt.py")

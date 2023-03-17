@@ -75,10 +75,11 @@ def darcyCalc(soilType,lnaplName,lnaplThickness,lnaplGradient):
     
     # Calculated from output
     outDat['Ko_avg']         = outDat['kro_avg'] * outDat['Ksat'] * outDat['denoil'] / outDat['denwat'] * outDat['waterViscosity'] / outDat['lnaplViscosity'] # m/d -- The average LNAPL hydraulic conductivity over the thickness of LNAPL in the formation.
-    outDat['Tn']             = outDat['Ko_avg'] * outDat['zmax']             # m2/d     -- The average LNAPL transmissivity over the thickness of LNAPL in the formation.
-    outDat['darcyFlux']      = outDat['Tn'] * outDat['inputLNAPLGrad']       # m/d      -- The volume of LNAPL flow per unit area of formation.
-    outDat['lnaplVolCont']   = outDat['Do'] / outDat['zmax'] / outDat['Por'] # unitless -- The average LNAPL volume per unit bulk formation volume.
-    outDat['lnaplSeepVel']   = outDat['darcyFlux'] / outDat['lnaplVolCont']  # m/d      -- The average flow velocity of the LNAPL under the given LNAPL gradient.
+    outDat['Tn']             = outDat['Ko_avg'] * outDat['zmax']                         # m2/d     -- The average LNAPL transmissivity over the thickness of LNAPL in the formation.
+    outDat['darcyFlux']      = outDat['Tn'] * outDat['inputLNAPLGrad'] / outDat['zmax']  # m/d      -- The volume of LNAPL flow per unit area of formation.
+    outDat['lnaplSat']       = outDat['Do'] / outDat['zmax'] / outDat['Por']             # unitless -- The average LNAPL volume per unit por volume.
+    outDat['lnaplVolCont']   = outDat['Do'] / outDat['zmax']                             # unitless -- The average LNAPL volume per unit bulk formation volume.
+    outDat['lnaplSeepVel']   = outDat['darcyFlux'] / outDat['lnaplVolCont']              # m/d      -- The average flow velocity of the LNAPL under the given LNAPL gradient.
     
     # Subset output to includ only the desired calculated values
     outDatFinal = dict();
