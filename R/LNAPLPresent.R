@@ -233,7 +233,8 @@ LNAPLPresentServer <- function(id) {
             })
 
         
-        if(cd != "Error with Inputs"){
+        #if(cd != "Error with Inputs"){
+        if(cd[1] != "Error with Inputs"){ # BS modified 6/1/2023
         # Assign Variable names to list items
         for(i in 1:length(cd)){
           cd[[i]] <- as.character(cd[[i]])
