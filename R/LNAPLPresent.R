@@ -64,7 +64,16 @@ LNAPLPresentUI <- function(id, label = "LNAPL Present"){
                                         br(),
                                         HTML("<i>Click Calculate to Update Maps and Model Output</i>"),br(), br(),
                                         actionButton(ns("calculate"), "Calculate", style=button_style), br(), br(),
-                                        HTML("<i>Note: If extreme values are entered, model may crash and the website will have to be reloaded.</i>")
+                                        div(style="text-align: left; padding-left: 10px;",
+                                            HTML("<i><p>Note: If extreme values are entered, model may crash and the website will have to be reloaded.</p>
+                                                 <p>There are assumptions that the app makes for how stratigraphy profiles should be entered and the model may fail if the input does not meet these conditions. These assumptions are:</p>
+                                              <ul>
+                                                <li>No overlapping stratigraphy (i.e., each layer top is equal to the bottom of the layer above).</li>
+                                                <li>There are at least two stratigraphic layers at each location.</li>
+                                                <li>There is at least 1 stratigraphic layer below the layer containing LNAPL.</li>
+                                                <li>LNAPL thickness &gt;0 m.</li>
+                                              </ul></i>
+                                              "))
                                  ) #fluid row 2
                                ), # end column 2
                         column(5, style='border-left: 1px solid black',
