@@ -35,3 +35,4 @@ If this is a first download open the LNAPL-Toolbox-.Rproj file in RStudio and ru
     ```
 4) Try running app again
 
+5) In some situations users may need to manually install older and/or archived versions of both R and key packages to ensure that the app runs properly.  The app’s GitHub repository includes information describing which <a href="https://github.com/concawe/LNAPL-Toolbox-/blob/master/renv.lock">version of R and the specific versions of each package</a> that are required.  For example, the app requires installation of rgeos (v0.5-5).  While the rgeos package is <a href="https://cran.r-project.org/web/packages/rgeos/index.html">no longer being actively maintained</a>, archived versions are available <a href="https://cran.r-project.org/src/contrib/Archive/rgeos/">here</a> for manual download and installation.
