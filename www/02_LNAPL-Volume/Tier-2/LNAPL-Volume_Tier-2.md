@@ -41,7 +41,7 @@ Guidance on the selection of specific input parameters for this tool is provided
 
 <h3> Key Assumptions </h3>  
 
-The model assumes that the LNAPL is in hydrostatic equilibrium with the surrounding media. Relative permeability is calculated by combining the Mualum model with the van Genuchten soil characteristic curve parameters (Charbeneau, 2007).
+The model assumes that the LNAPL is in hydrostatic equilibrium with the surrounding media. Relative permeability is calculated by combining the Mualum model with the van Genuchten soil characteristic curve parameters (Charbeneau, 2007). The f-factor must be a positive value less than 1. Empirically-determined values range from 0.2 to 0.5, with a recommended median of 0.3 (Charbeneau and Beckett, 2007).
 
 <hr class="featurette-divider">
 
