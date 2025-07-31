@@ -1,3 +1,6 @@
+# Updates
+- Contact details
+
 # 5538_Concawe_LNAPL-Webtool_1.0a
 The application is implemented in R using the Shiny framework. It additionally uses the reticulate package to allow for interoperability between R and Python.
 
